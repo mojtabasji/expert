@@ -58,7 +58,7 @@ const Welcome = (props: Props) => {
 
             </View>
             <View style={styles.optionsArea}>
-                <Text style={css.largText}>به اکسپرت خوش آمدید</Text>
+                <Text style={css.largeText}>به اکسپرت خوش آمدید</Text>
                 <Text style={[css.normalText, { color: 'gray', width: '80%' }]}>سوالات خود را از متخصص بپرسید و به سوالاتی که در آن تخصص دارید پاسخ دهید.</Text>
                 <View style={{
                     height: '50%', width: '100%',
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#45cafc',
         borderRadius: 20,
         paddingVertical: 10,
-        paddingHorizontal: 40,
+        paddingHorizontal: 30,
 
     }
 });

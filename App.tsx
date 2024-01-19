@@ -9,11 +9,12 @@ import {
   View,
 } from 'react-native';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Welcome from './screens/Welcome';
 import Login from './screens/Login';
+import BTabHandler from './screens/BTabHandler';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,9 +24,10 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name='BTabHandler' component={BTabHandler} />
       </Stack.Navigator>
     </NavigationContainer>
   );
