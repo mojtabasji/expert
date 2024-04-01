@@ -7,6 +7,7 @@ import Home from './Home';
 import Search from './Search';
 import Bell from './Bell';
 import Profile from './Profile';
+import { StorageHandler } from '../constants/StorageHandler';
 
 
 
@@ -16,6 +17,11 @@ const BTabHandler = () => {
 
     const change_tab = (tab_name: string) => {
         setCurrentTab(tab_name);
+    }
+
+    const get_data = async () => {
+        let session_id = await StorageHandler.retrieveData("session_id");
+        console.log("session_id:", session_id);
     }
 
     return (
@@ -43,9 +49,9 @@ const BTabHandler = () => {
                     <Icon name='bell' size={20} color={currentTab == 'bell' ? 'black' : 'gray'} onPress={() => { change_tab('bell') }} />
                     <Icon name='user' size={20} color={currentTab == 'user' ? 'black' : 'gray'} onPress={() => { change_tab('user') }} />
                 </View>
-                <View style={styles.add_new}>
+                <TouchableOpacity style={styles.add_new} onPress={() => { get_data() }}>
                     <Icon name='plus' size={20} color={css.colors.black} />
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
     );

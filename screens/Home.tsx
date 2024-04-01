@@ -1,52 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import css from '../assets/css';
+import { api } from '../constants/Const';
+import axios from 'axios';
+
+
+import { StorageHandler } from '../constants/StorageHandler';
 
 type Exp = {
-    image_uri: string,
+    image: string,
     uID: number,
     username: string,
-    description: string,
+    content: string,
 }
 
 
 const Home = () => {
-    let exps: Exp[] = [
-        {
-            image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-            uID: 1,
-            username: 'ali',
-            description: 'this is a description',
-        },
-        {
-            image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-            uID: 1,
-            username: 'ali',
-            description: 'this is a description',
-        },
-        {
-            image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-            uID: 1,
-            username: 'ali',
-            description: 'this is a description',
-        },
-        {
-            image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-            uID: 1,
-            username: 'ali',
-            description: 'this is a description',
-        },
-    ];
+    const [exps, setExps] = useState([]);
+
+    useEffect(()=>{
+        StorageHandler.retrieveData("session_id").then(data=>{
+            let session;
+            session = data;
+            console.log(session);
+            //  api.get_user_related_exps
+            axios.get(api.get_user_related_exps, {
+                headers:{
+                    Cookie: `session_id=${session};`
+                }            
+            }).then( res => {
+                setExps(res.data);
+            }).catch(err=>{console.log(err);});
+        });
+    },[])
 
 
     const render_items = (item: Exp, index: number) => {
+        console.log(index, item);
         let scaled_height: number = 300;
-        Image.getSize(item.image_uri, (width_, height_) => {
+        Image.getSize(item.image, (width_, height_) => {
             scaled_height = (height_ * Dimensions.get('window').width * 0.95) / width_;
         });
         return (
             <View style={styles.itemArea} key={index} >
-                <Image source={{ uri: item.image_uri }} style={{
+                <Image source={{ uri: item.image }} style={{
                     width: '100%',
                     height: scaled_height,
                     // borderRadius: 15,
@@ -54,7 +51,7 @@ const Home = () => {
                     borderTopRightRadius: 15,
                 }} />
                 <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
-                    <Text style={{ marginTop: 10, }}>{item.description}</Text>
+                    <Text style={{ marginTop: 10, }}>{item.content}</Text>
                 </View>
             </View>
         );
@@ -78,13 +75,17 @@ const Home = () => {
                         borderBottomWidth:1,
                     }} >
                         <ScrollView horizontal={true} >
-                            <View style={{
+                            <TouchableOpacity style={{
                                 width: 80,
                                 height: 80,
                                 borderRadius: 40,
                                 margin: 10,
-                                backgroundColor: css.colors.cyan,
-                            }} />
+                                backgroundColor: css.colors.danger,
+                            }}
+                            onPress={async ()=>{
+                                StorageHandler.retrieveData("session_id").then(data=>{ console.log(data); });
+                            }}
+                            />
                             <View style={{
                                 width: 80,
                                 height: 80,

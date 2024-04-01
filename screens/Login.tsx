@@ -1,7 +1,11 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import axios from 'axios';
+import { api } from '../constants/Const';
 
+
+import { StorageHandler } from '../constants/StorageHandler';
 import css from '../assets/css';
 
 interface Props {
@@ -9,6 +13,62 @@ interface Props {
 }
 
 const Login = (props: Props) => {
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+
+    const login = async () => {
+        if(username == '' || password == '') {
+            Alert.alert(
+                "خطا",
+                "لطفا نام کاربری و رمز عبور را وارد کنید",
+                [
+                    {
+                        text: "باشه",
+                        onPress: () => console.log("OK Pressed")
+                    }
+                ],
+                { cancelable: false }
+            );
+            return;
+        }
+        let form = new FormData();
+        form.append("username", username);
+        form.append("password", password);
+        console.log(api.login, form);
+        axios.post(api.login, form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                // Add any other headers if needed
+                'Cookie': 'cookie1=value1; cookie2=value2' // Include cookies here
+            },
+            withCredentials: true,
+        }).then(async (response) => {
+            if (response.data.result == "true") {
+                console.log(response.data);
+                await StorageHandler.storeData("session_id", response.data.session_id).then(() => {console.log("session_id stored");});
+                StorageHandler.retrieveData("session_id").then(data => { console.log("session_id retrieved:", data); });
+                change_screen("BTabHandler");
+                
+            } else {
+                // alert("incorrect user password");
+                Alert.alert(
+                    "خطا",
+                    "نام کاربری یا رمز عبور اشتباه است",
+                    [
+                        {
+                            text: "باشه",
+                            onPress: () => console.log("OK Pressed")
+                        }
+                    ],
+                    { cancelable: false }
+                );
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
     const change_screen = (screen_name: string, values: object = {}) => {
         props.navigation.navigate(screen_name, values);
@@ -32,7 +92,9 @@ const Login = (props: Props) => {
                     <TextInput
                         style={styles.input}
                         placeholder="نام کاربری"
-                        keyboardType="phone-pad" />
+                        onChangeText={(text) => setUsername(text)}
+                        value={username}
+                    />
                 </View>
                 <View style={{
                     flexDirection: 'row',
@@ -43,8 +105,11 @@ const Login = (props: Props) => {
                     <Icon name="heart" size={30} color="#000" />
                     <TextInput
                         style={styles.input}
-                        placeholder="نام کاربری"
-                        keyboardType="phone-pad" />
+                        placeholder="رمز عبور"
+                        onChangeText={(text) => setPassword(text)}
+                        value={password}
+                        secureTextEntry={true}
+                    />
                 </View>
                 <TouchableOpacity style={{
                     width: '75%',
@@ -54,7 +119,7 @@ const Login = (props: Props) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
-                onPress={()=>{change_screen("BTabHandler");}}
+                    onPress={login}
                 >
                     <Text style={css.btn_text}>ورود</Text>
                 </TouchableOpacity>
@@ -82,7 +147,11 @@ const Login = (props: Props) => {
                         backgroundColor: css.colors.primary,
                         justifyContent: 'center',
                         alignItems: 'center',
-                    }}>
+                    }}
+                        onPress={() => {
+                            console.log("something here:", api.login);
+                            change_screen("BTabHandler");
+                        }} >
                         <Text style={css.btn_text}>گوگل</Text>
                     </TouchableOpacity>
                 </View>
