@@ -9,6 +9,7 @@ type colors = {
     warning: string,
     info: string,
     light: string,
+    light_dark: string,
     dark: string,
     white: string,
     black: string,
@@ -37,15 +38,16 @@ class css {
             warning: '#000',
             info: '#000',
             light: '#000',
-            dark: '#000',
+            light_dark: '#aeaeae',
+            dark: '#4b4b4b',
             white: '#000',
             black: '#202020',
-            gray: '#f0f0f0',
+            gray: '#e8e8e8',
             blue: '#000',
             indigo: '#000',
             purple: '#000',
             pink: '#000',
-            red: '#000',
+            red: '#d63031',
             orange: '#000',
             yellow: '#000',
             green: '#000',
@@ -92,6 +94,26 @@ class css {
             textAlign: 'center',
             fontWeight: 'bold',
         };
+    }
+
+    static get minimalText(): object {
+        return {
+            fontFamily: 'IRANSansMobile',
+            fontSize: RFValue(10),
+            color: '#000',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }
+    }
+
+    static get minText(): object {
+        return {
+            fontFamily: 'IRANSansMobile',
+            fontSize: RFValue(8),
+            color: '#000',
+            textAlign: 'center',
+            fontWeight: 'bold',
+        }
     }
 
 }

@@ -14,6 +14,7 @@ type Exp = {
     content: string,
 }
 
+import data, { top_users } from '../assets/data';
 
 const Home = () => {
     const [exps, setExps] = useState([]);
@@ -66,13 +67,13 @@ const Home = () => {
                 <View style={{
                     width: '100%',
                     alignItems: 'center',
-                    paddingBottom:10,
+                    paddingBottom: 10,
                 }} >
                     <View style={{
                         width: '100%',
                         height: 100,
                         borderBottomColor: css.colors.gray,
-                        borderBottomWidth:1,
+                        borderBottomWidth: 1,
                     }} >
                         <ScrollView horizontal={true} >
                             <TouchableOpacity style={{
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     itemArea: {
         backgroundColor: css.colors.gray,
         borderRadius: 15,
-        marginTop: 10,
+        marginTop: 15,
         width: "95%",
     },
 });
