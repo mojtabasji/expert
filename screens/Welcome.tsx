@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'rea
 import LinearGradient from 'react-native-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
-import css from '../assets/css';
+import css from '../constants/css';
+import { StorageHandler } from '../constants/StorageHandler';
 
 interface Props {
     navigation: any
@@ -55,7 +56,6 @@ const Welcome = (props: Props) => {
                         />
                     </View>
                 </View>
-
             </View>
             <View style={styles.optionsArea}>
                 <Text style={css.largeText}>به اکسپرت خوش آمدید</Text>
@@ -65,7 +65,15 @@ const Welcome = (props: Props) => {
                     flexDirection: 'row-reverse',
                     justifyContent: 'space-evenly', alignItems: 'center',
                 }}>
-                    <TouchableOpacity style={styles.btn} onPress={() => change_screen('Login')}>
+                    <TouchableOpacity style={styles.btn} onPress={() => {
+                        StorageHandler.retrieveData("session_id").then((data)=>{
+                            if(data!= undefined){
+                                change_screen('BTabHandler')
+                            }else{
+                                change_screen('Login')
+                            }
+                        })
+                        }}>
                         <Text style={css.btn_text}>برای شروع وارد شوید</Text>
                     </TouchableOpacity>
                     <View style={styles.btn}>

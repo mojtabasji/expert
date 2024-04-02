@@ -6,7 +6,7 @@ import { api } from '../constants/Const';
 
 
 import { StorageHandler } from '../constants/StorageHandler';
-import css from '../assets/css';
+import css from '../constants/css';
 
 interface Props {
     navigation: any,
@@ -156,7 +156,13 @@ const Login = (props: Props) => {
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={()=>{
+                        StorageHandler.retrieveData("somei").then(data=>{
+                            console.log(data);
+                        });
+                    }}
+                    >
                         <Text style={css.btn_text}>ثبت نام</Text>
                     </TouchableOpacity>
                     <Text style={[css.smallText, { color: 'gray' }]}>حساب کاربری ندارید؟</Text>

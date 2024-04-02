@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import css from '../assets/css';
-import Home from './Home';
+import css from '../constants/css';
+import HSHandler from './HSHandler';
 import Search from './Search';
 import Bell from './Bell';
 import Profile from './Profile';
 import { StorageHandler } from '../constants/StorageHandler';
 
 
-
+const Tab = createBottomTabNavigator();
 const BTabHandler = () => {
     const [currentTab, setCurrentTab] = useState('home');
 
@@ -25,10 +26,22 @@ const BTabHandler = () => {
     }
 
     return (
+        <Tab.Navigator screenOptions={{
+            headerShown: false,
+        
+        }}>
+            <Tab.Screen name="HSHandler" component={HSHandler} />
+            <Tab.Screen name="Search" component={Search} />
+            <Tab.Screen name="Bell" component={Bell} />
+            <Tab.Screen name="user" component={Profile} />
+        </Tab.Navigator>
+    );
+
+    return (
         <View style={styles.container}>
             <View style={styles.contentArea}>
                 {
-                    currentTab == 'home' ? <Home /> : null
+                    currentTab == 'home' ? <HSHandler /> : null
                 }
                 {
                     currentTab == 'search' ? <Search /> : null
@@ -41,7 +54,7 @@ const BTabHandler = () => {
                 }
             </View>
             <View style={styles.tabBarArea}>
-                <View style={{ width: '40%', justifyContent: 'space-around', flexDirection: 'row'}} >
+                <View style={{ width: '40%', justifyContent: 'space-around', flexDirection: 'row' }} >
                     <Icon name='home' size={20} color={currentTab == 'home' ? 'black' : 'gray'} onPress={() => { change_tab('home') }} />
                     <Icon name='search' size={20} color={currentTab == 'search' ? 'black' : 'gray'} onPress={() => { change_tab('search') }} />
                 </View>
