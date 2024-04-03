@@ -2,71 +2,49 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 
 import css from '../constants/css';
-import HSHandler from './HSHandler';
+import HSHandler from './Home/HSHandler';
+import PSHandler from './Profile/PSHandler';
 import Search from './Search';
 import Bell from './Bell';
-import Profile from './Profile';
+import NewExp from './NewExp';
 import { StorageHandler } from '../constants/StorageHandler';
 
 
 const Tab = createBottomTabNavigator();
 const BTabHandler = () => {
-    const [currentTab, setCurrentTab] = useState('home');
-
-
-    const change_tab = (tab_name: string) => {
-        setCurrentTab(tab_name);
-    }
-
-    const get_data = async () => {
-        let session_id = await StorageHandler.retrieveData("session_id");
-        console.log("session_id:", session_id);
-    }
 
     return (
-        <Tab.Navigator screenOptions={{
-            headerShown: false,
-        
-        }}>
-            <Tab.Screen name="HSHandler" component={HSHandler} />
-            <Tab.Screen name="Search" component={Search} />
-            <Tab.Screen name="Bell" component={Bell} />
-            <Tab.Screen name="user" component={Profile} />
-        </Tab.Navigator>
-    );
+        <NavigationContainer>
+            <Tab.Navigator screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName = '';
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.contentArea}>
-                {
-                    currentTab == 'home' ? <HSHandler /> : null
+                    if (route.name == "HSHandler") iconName = 'home';
+                    if (route.name == "Search") iconName = 'search';
+                    if (route.name == "NewExp") iconName = 'plus-circle';
+                    if (route.name == "Bell") iconName = 'bell';
+                    if (route.name == "user") iconName = 'user';
+
+                    if (focused) {
+                        color = css.colors.dark;
+                    }
+                    else {
+                        color = css.colors.light_dark;
+                    }
+                    return <Icon name={iconName} size={size} color={color} />;
                 }
-                {
-                    currentTab == 'search' ? <Search /> : null
-                }
-                {
-                    currentTab == 'bell' ? <Bell /> : null
-                }
-                {
-                    currentTab == 'user' ? <Profile /> : null
-                }
-            </View>
-            <View style={styles.tabBarArea}>
-                <View style={{ width: '40%', justifyContent: 'space-around', flexDirection: 'row' }} >
-                    <Icon name='home' size={20} color={currentTab == 'home' ? 'black' : 'gray'} onPress={() => { change_tab('home') }} />
-                    <Icon name='search' size={20} color={currentTab == 'search' ? 'black' : 'gray'} onPress={() => { change_tab('search') }} />
-                </View>
-                <View style={{ width: '40%', justifyContent: 'space-around', flexDirection: 'row' }}>
-                    <Icon name='bell' size={20} color={currentTab == 'bell' ? 'black' : 'gray'} onPress={() => { change_tab('bell') }} />
-                    <Icon name='user' size={20} color={currentTab == 'user' ? 'black' : 'gray'} onPress={() => { change_tab('user') }} />
-                </View>
-                <TouchableOpacity style={styles.add_new} onPress={() => { get_data() }}>
-                    <Icon name='plus' size={20} color={css.colors.black} />
-                </TouchableOpacity>
-            </View>
-        </View>
+            })}>
+                <Tab.Screen name="HSHandler" component={HSHandler} />
+                <Tab.Screen name="Search" component={Search} />
+                <Tab.Screen name="NewExp" component={NewExp} />
+                <Tab.Screen name="Bell" component={Bell} />
+                <Tab.Screen name="user" component={PSHandler} />
+            </Tab.Navigator>
+        </NavigationContainer>
     );
 };
 

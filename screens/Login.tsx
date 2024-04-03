@@ -8,11 +8,8 @@ import { api } from '../constants/Const';
 import { StorageHandler } from '../constants/StorageHandler';
 import css from '../constants/css';
 
-interface Props {
-    navigation: any,
-}
 
-const Login = (props: Props) => {
+const Login = (props: any) => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');

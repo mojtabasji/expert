@@ -1,41 +1,6 @@
 
 export const max_comment_see_in_home = 2;
 
-type Exp = {
-    image_uri: string,
-    uID: number,
-    username: string,
-    description: string,
-}
-
-
-export const exps: Exp[] = [
-    {
-        image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-        uID: 1,
-        username: 'ali',
-        description: 'this is a description',
-    },
-    {
-        image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-        uID: 1,
-        username: 'ali',
-        description: 'this is a description',
-    },
-    {
-        image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-        uID: 1,
-        username: 'ali',
-        description: 'this is a description',
-    },
-    {
-        image_uri: "https://c02.purpledshub.com/uploads/sites/62/2022/09/GettyImages-200386624-001-d80a3ec.jpg?w=1029&webp=1",
-        uID: 1,
-        username: 'ali',
-        description: 'this is a description',
-    },
-];
-
 export const serverAddress = 'http://bytecraft.ir/expert/api/';
 
 export const api = {

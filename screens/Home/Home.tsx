@@ -1,40 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
-import css from '../constants/css';
-import { api } from '../constants/Const';
+import css from '../../constants/css';
+import { api } from '../../constants/Const';
 import axios from 'axios';
 
 
-import { StorageHandler } from '../constants/StorageHandler';
+import { StorageHandler } from '../../constants/StorageHandler';
+import { Exp, User } from '../../constants/Types';
 
-type Exp = {
-    image: string,
-    uID: number,
-    username: string,
-    content: string,
-    user?: User,
-    title: string
-}
-type User = {
-    id: number,
-    username: string,
-    fullname: string,
-    avatar: string,
-    skills?: undefined,
-    phone: string,
-    bio: string
-}
 
-import data, { top_users } from '../assets/data';
+import data, { top_users } from '../../assets/data';
 
 const Home = (props: any) => {
-    const [exps, setExps] = useState([]);
+    const [exps, setExps] = useState(data);
 
     useEffect(() => {
         StorageHandler.retrieveData("session_id").then(data => {
             let session;
             session = data;
-            //  api.get_user_related_exps
             axios.get(api.get_user_related_exps, {
                 headers: {
                     Cookie: `session_id=${session};`
@@ -50,9 +33,9 @@ const Home = (props: any) => {
     }; 
 
     const render_items = (item: Exp, index: number) => {
-        let image_uri = item.image.replace("https", "http");
+        let image_uri = item.image == null? null : item.image;
         let scaled_height: number = 300;
-        Image.getSize(image_uri, (width_, height_) => {
+        if (image_uri) Image.getSize(image_uri, (width_, height_) => {
             scaled_height = (height_ * Dimensions.get('window').width * 0.95) / width_;
         });
         return (
@@ -76,7 +59,7 @@ const Home = (props: any) => {
                     item.user?.avatar ?
                     <Image style={styles.avatar} source={{uri: item.user?.avatar}} />
                     :
-                    <Image style={styles.avatar} source={require('../assets/images/user_avatar.png')} />
+                    <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
                 }
                 <Text style={css.minimalText}>{item.user?.username}</Text>
                 </View>
@@ -106,24 +89,31 @@ const Home = (props: any) => {
                         borderBottomWidth: 1,
                     }} >
                         <ScrollView horizontal={true} >
-                            <TouchableOpacity style={{
-                                width: 80,
-                                height: 80,
-                                borderRadius: 40,
-                                margin: 10,
-                                backgroundColor: css.colors.danger,
-                            }}
-                                onPress={async () => {
-                                    StorageHandler.retrieveData("session_id").then(data => { console.log(data); });
-                                }}
-                            />
-                            <View style={{
-                                width: 80,
-                                height: 80,
-                                borderRadius: 40,
-                                margin: 10,
-                                backgroundColor: css.colors.cyan,
-                            }} />
+                            {
+                                top_users.map((item, index) => {
+                                    return (
+                                        <TouchableOpacity key={index} style={{
+                                            width: 80,
+                                            height: 80,
+                                            borderRadius: 40,
+                                            margin: 10,
+                                            backgroundColor: css.colors.primary,
+                                        }}
+                                            onPress={() => {
+                                                change_screen("ShowOneUser", { user: item });
+                                            }}
+                                        >
+                                            <Image source={{ uri: item.avatar }} style={{
+                                                width: 80,
+                                                height: 80,
+                                                borderRadius: 40,
+                                                borderWidth: 2,
+                                                borderColor: css.colors.success,
+                                            }} />
+                                        </TouchableOpacity>
+                                    );
+                                })
+                            }
                         </ScrollView>
                     </View>
                     {

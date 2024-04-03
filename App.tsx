@@ -1,35 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+  SafeAreaView, ScrollView, StatusBar,
+  StyleSheet, Text, useColorScheme, View,
 } from 'react-native';
+import axios from 'axios';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { api } from './constants/Const';
+import { StorageHandler } from './constants/StorageHandler';
+import LoginHandler from './constants/LoginHandler';
 import Welcome from './screens/Welcome';
-import Login from './screens/Login';
 import BTabHandler from './screens/BTabHandler';
 
 
-const Stack = createNativeStackNavigator();
-
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [loggedIn, setLoggedIn] = React.useState(true);
+  const updateLoggedIn = (value: boolean) => {
+    setLoggedIn(value);
+  }
+
+  useEffect(() => {
+    StorageHandler.retrieveData("session_id").then(data => {
+      let session;
+      session = data;
+      axios.get(api.is_auth_valid, {
+        headers: {
+          Cookie: `session_id=${session};`
+        }
+      }).then(res => {
+        if (res.data.result == "true") {
+          setLoggedIn(true);
+        }
+        else {
+          setLoggedIn(false);
+        }
+      }).catch(err => { console.log(err); });
+    });
+  }, [])
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name='BTabHandler' component={BTabHandler} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <LoginHandler.Provider value={{ loggedIn, updateLoggedIn }}>
+      {
+        loggedIn ? <BTabHandler /> : <Welcome />
+      }
+    </LoginHandler.Provider>
   );
 }
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Home from "./Home";
-import ShowOne from "./ShowOne";
+import Profile from "./Profile";
+import ShowOne from "../ShowOne";
 
 const HomeStack = createNativeStackNavigator();
 const HSHandler = ()=>{
@@ -10,8 +10,8 @@ const HSHandler = ()=>{
         <HomeStack.Navigator screenOptions={{
             headerShown: false
         }}>
-            <HomeStack.Screen name="Home" component={Home} />
-            <HomeStack.Screen name="ShowOneExp" component={ShowOne} />
+            <HomeStack.Screen name="Profile" component={Profile} />
+            <HomeStack.Screen name="PShowOneExp" component={ShowOne} />
         </HomeStack.Navigator>
     );
 }
