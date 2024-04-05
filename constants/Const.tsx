@@ -1,7 +1,7 @@
 
 export const max_comment_see_in_home = 2;
 
-export const serverAddress = 'http://bytecraft.ir/expert/api/';
+export const serverAddress = 'https://bytecraft.ir/expert/api/';
 
 export const api = {
     is_auth_valid: serverAddress + 'users/authcheck',

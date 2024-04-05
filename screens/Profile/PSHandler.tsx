@@ -3,16 +3,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Profile from "./Profile";
 import ShowOne from "../ShowOne";
+import FullScreenImage from "../FullScreenImage";
 
-const HomeStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
 const HSHandler = ()=>{
     return(
-        <HomeStack.Navigator screenOptions={{
+        <ProfileStack.Navigator screenOptions={{
             headerShown: false
         }}>
-            <HomeStack.Screen name="Profile" component={Profile} />
-            <HomeStack.Screen name="PShowOneExp" component={ShowOne} />
-        </HomeStack.Navigator>
+            <ProfileStack.Screen name="Profile" component={Profile} />
+            <ProfileStack.Screen name="PShowOneExp" component={ShowOne} />
+            <ProfileStack.Screen name="FullScreenImage" component={FullScreenImage} />
+        </ProfileStack.Navigator>
     );
 }
 

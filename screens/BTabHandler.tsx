@@ -7,9 +7,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import css from '../constants/css';
 import HSHandler from './Home/HSHandler';
 import PSHandler from './Profile/PSHandler';
-import Search from './Search';
+import SSHandler from './Search/SSHandler';
 import Bell from './Bell';
-import NewExp from './NewExp';
+import NESHandler from './New/NSHandler';
 import { StorageHandler } from '../constants/StorageHandler';
 
 
@@ -24,8 +24,8 @@ const BTabHandler = () => {
                     let iconName = '';
 
                     if (route.name == "HSHandler") iconName = 'home';
-                    if (route.name == "Search") iconName = 'search';
-                    if (route.name == "NewExp") iconName = 'plus-circle';
+                    if (route.name == "SSHandler") iconName = 'search';
+                    if (route.name == "NESHandler") iconName = 'plus-circle';
                     if (route.name == "Bell") iconName = 'bell';
                     if (route.name == "user") iconName = 'user';
 
@@ -39,8 +39,8 @@ const BTabHandler = () => {
                 }
             })}>
                 <Tab.Screen name="HSHandler" component={HSHandler} />
-                <Tab.Screen name="Search" component={Search} />
-                <Tab.Screen name="NewExp" component={NewExp} />
+                <Tab.Screen name="SSHandler" component={SSHandler} />
+                <Tab.Screen name="NESHandler" component={NESHandler} />
                 <Tab.Screen name="Bell" component={Bell} />
                 <Tab.Screen name="user" component={PSHandler} />
             </Tab.Navigator>

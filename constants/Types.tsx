@@ -6,7 +6,7 @@ export type Exp = {
     content: string,
     user: User,
     title: string,
-    responses?: Responses []
+    responses?: Response []
 }
 export type User = {
     id: number,
@@ -18,10 +18,14 @@ export type User = {
     bio: string | null
 }
 
-export type Responses = {
+export type Response = {
     user: User,
     content: string,
     likes: number,
     dislikes: number
 }
 
+export type Skill = {
+    id: number,
+    name: string
+}

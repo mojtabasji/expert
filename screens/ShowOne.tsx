@@ -34,7 +34,7 @@ const ShowOne = (props: any) => {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}>
-                <View style={{ width: Dimensions.get('window').width}}>
+                <View style={{ width: Dimensions.get('window').width }}>
                     <View style={{
                         borderTopLeftRadius: 15,
                         borderTopRightRadius: 15,
@@ -48,11 +48,17 @@ const ShowOne = (props: any) => {
                     }}>
                         {
                             exp.image &&
+                            <TouchableOpacity onPress={()=>{
+                                props.navigation.navigate("FullScreenImage", { images: {
+                                    url: exp.image
+                                } });
+                            }}>
                             <Image style={{
                                 width: '100%',
                                 height: scaled_height,
                                 resizeMode: "cover", margin: 1,
                             }} source={{ uri: exp.image }} />
+                            </TouchableOpacity>
                         }
                         <View style={{
                             paddingHorizontal: 10,
@@ -70,7 +76,7 @@ const ShowOne = (props: any) => {
                     {
                         response.map((item, index) => {
                             return (
-                                <>
+                                <View key={index}>
                                     <View key={index} style={styles.responseArea}>
                                         <Text style={[css.minimalText, { textAlign: "justify", marginVertical: 5 }]}>{item.content}</Text>
                                     </View>
@@ -80,7 +86,7 @@ const ShowOne = (props: any) => {
                                             :
                                             <Image style={styles.avatar} source={require('../assets/images/user_avatar.png')} />
                                     }
-                                </>
+                                </View>
                             );
                         })
                     }

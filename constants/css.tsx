@@ -10,6 +10,7 @@ type colors = {
     info: string,
     light: string,
     light_dark: string,
+    linkBlue: string,
     dark: string,
     white: string,
     black: string,
@@ -39,11 +40,12 @@ class css {
             info: '#000',
             light: '#000',
             light_dark: '#aeaeae',
+            linkBlue: '#00A6FF',
             dark: '#4b4b4b',
             white: '#000',
             black: '#202020',
             gray: '#e8e8e8',
-            blue: '#000',
+            blue: '#006CFF',
             indigo: '#000',
             purple: '#000',
             pink: '#000',
@@ -82,17 +84,17 @@ class css {
             fontSize: RFValue(16),
             color: '#000',
             textAlign: 'center',
-            fontWeight: 'bold',
+            fontWeight: '600',
         };
     }
 
     static get smallText(): object {
         return {
             fontFamily: 'IRANSansMobile',
-            fontSize: RFValue(15),
+            fontSize: RFValue(14),
             color: '#000',
             textAlign: 'center',
-            fontWeight: 'bold',
+            fontWeight: '500',
         };
     }
 
