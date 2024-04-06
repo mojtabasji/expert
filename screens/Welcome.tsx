@@ -6,7 +6,7 @@ import LoginHandler from '../constants/LoginHandler';
 const { width, height } = Dimensions.get('window');
 import css from '../constants/css';
 import { StorageHandler } from '../constants/StorageHandler';
-import Login from './Login';
+import LHandler from './Login/LHandler';
 
 
 const Welcome = (props: any) => {
@@ -79,15 +79,12 @@ const Welcome = (props: any) => {
                                 }}>
                                     <Text style={css.btn_text}>برای شروع وارد شوید</Text>
                                 </TouchableOpacity>
-                                <View style={styles.btn}>
-                                    <Text style={css.btn_text}>ثبت نام</Text>
-                                </View>
                             </View>
 
                         </View>
                     </View>
                     :
-                    <Login />
+                    <LHandler />
             }
         </>
     );

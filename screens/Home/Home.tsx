@@ -26,7 +26,8 @@ const Home = (props: any) => {
                     Cookie: `session_id=${session};`
                 }
             }).then(res => {
-                setExps(res.data);
+                console.log("related exps: ", res.data);
+                setExps(res.data as Exp[]);
             }).catch(err => { console.log(err); }).finally(() => {
                 setRefreshing(false);
             });
@@ -42,7 +43,7 @@ const Home = (props: any) => {
                     Cookie: `session_id=${session};`
                 }
             }).then(res => {
-                setExps(res.data);
+                setExps(res.data as Exp[]);
             }).catch(err => { console.log(err); });
         });
     }, [])

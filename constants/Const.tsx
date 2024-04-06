@@ -12,6 +12,8 @@ export const api = {
     new_exp: serverAddress + 'exps/create',
     get_skills: serverAddress + 'skills',
     skills_add: serverAddress + 'skills/add', // add new skill to skills table
+    get_user_skills: serverAddress + 'users/skills',    // GET
+    add_skill_to_user: serverAddress + 'users/skills/add', // POST
     my_exps: serverAddress + 'exps/myexps',
     show_exp: serverAddress + 'exps/show',
     get_user_info: serverAddress + 'users/show/',

@@ -2,11 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
-import { api } from '../constants/Const';
+import { api } from '../../constants/Const';
 
-import LoginHandler from '../constants/LoginHandler';
-import { StorageHandler } from '../constants/StorageHandler';
-import css from '../constants/css';
+import LoginHandler from '../../constants/LoginHandler';
+import { StorageHandler } from '../../constants/StorageHandler';
+import css from '../../constants/css';
 
 
 const Login = (props: any) => {
@@ -74,7 +74,7 @@ const Login = (props: any) => {
     return (
         <View style={styles.container}>
             <View style={styles.logoArea}>
-                <Image source={require('../assets/images/startup3.png')} style={styles.logoImage} />
+                <Image source={require('../../assets/images/startup3.png')} style={styles.logoImage} />
             </View>
             <View style={styles.optionsArea}>
                 <Text style={css.largeText}>ورود</Text>
@@ -146,8 +146,6 @@ const Login = (props: any) => {
                         alignItems: 'center',
                     }}
                         onPress={() => {
-                            console.log("something here:", api.login);
-                            change_screen("BTabHandler");
                         }} >
                         <Text style={css.btn_text}>گوگل</Text>
                     </TouchableOpacity>
@@ -155,9 +153,7 @@ const Login = (props: any) => {
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                     onPress={()=>{
-                        StorageHandler.retrieveData("somei").then(data=>{
-                            console.log(data);
-                        });
+                        props.change_screen("Register");
                     }}
                     >
                         <Text style={css.btn_text}>ثبت نام</Text>

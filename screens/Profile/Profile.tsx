@@ -48,7 +48,11 @@ const Profile = (Props: any) => {
                             </Pressable>
                         }}>
                             <Menu.Item isDisabled>Sofia</Menu.Item>
-                            <Menu.Item onPress={()=>{
+                            <Menu.Item>Edit Profile</Menu.Item>
+                            <Menu.Item onPress={() => {
+                                Props.navigation.navigate("SkillsEdit", { user: user });
+                            }}>Edit Skills</Menu.Item>
+                            <Menu.Item onPress={() => {
                                 Alert.alert("Log out", "Are you sure to log out?", [
                                     {
                                         text: "Yes",
