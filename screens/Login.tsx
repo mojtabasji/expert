@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import { api } from '../constants/Const';
 
-
+import LoginHandler from '../constants/LoginHandler';
 import { StorageHandler } from '../constants/StorageHandler';
 import css from '../constants/css';
 
@@ -14,6 +14,7 @@ const Login = (props: any) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
 
     const login = async () => {
         if(username == '' || password == '') {
@@ -46,8 +47,7 @@ const Login = (props: any) => {
                 console.log(response.data);
                 await StorageHandler.storeData("session_id", response.data.session_id).then(() => {console.log("session_id stored");});
                 StorageHandler.retrieveData("session_id").then(data => { console.log("session_id retrieved:", data); });
-                change_screen("BTabHandler");
-                
+                updateLoggedIn(true);                
             } else {
                 // alert("incorrect user password");
                 Alert.alert(

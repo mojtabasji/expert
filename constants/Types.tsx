@@ -29,3 +29,12 @@ export type Skill = {
     id: number,
     name: string
 }
+
+export type Notification = {
+    id: number,
+    user: User,
+    exp: Exp,
+    content: string,
+    is_read: boolean,
+    created_at: string
+}

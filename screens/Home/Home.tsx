@@ -82,7 +82,7 @@ const Home = (props: any) => {
                     }
                     <Text style={css.minimalText}>{item.user?.username}</Text>
                 </View>
-                <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
+                <View style={{ marginBottom: 10, paddingHorizontal: 10,paddingBottom:10 }}>
                     <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10 }}>{item.title}</Text>
                     <Text style={{ marginTop: 10, textAlign: "justify", }}>{item.content}</Text>
                 </View>
@@ -134,7 +134,7 @@ const Home = (props: any) => {
                                                 height: 80,
                                                 borderRadius: 40,
                                                 borderWidth: 2,
-                                                borderColor: css.colors.success,
+                                                borderColor: css.colors.secondary,
                                             }} />
                                         </TouchableOpacity>
                                     );
@@ -156,11 +156,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     itemArea: {
-        backgroundColor: css.colors.gray,
+        backgroundColor: css.colors.middle,
         borderRadius: 15,
         marginTop: 15,
         width: "95%",
-        borderWidth: 1,
     },
     avatar: {
         width: 40,

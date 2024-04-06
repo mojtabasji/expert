@@ -3,12 +3,13 @@ import { View, TouchableOpacity, Text, StyleSheet, Dimensions, Image } from 'rea
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { NativeBaseProvider, Box } from "native-base";
 
 import css from '../constants/css';
 import HSHandler from './Home/HSHandler';
 import PSHandler from './Profile/PSHandler';
 import SSHandler from './Search/SSHandler';
-import Bell from './Bell';
+import NoSHandler from './Notification/NoSHandler';
 import NESHandler from './New/NSHandler';
 import { StorageHandler } from '../constants/StorageHandler';
 
@@ -17,34 +18,36 @@ const Tab = createBottomTabNavigator();
 const BTabHandler = () => {
 
     return (
-        <NavigationContainer>
-            <Tab.Navigator screenOptions={({ route }) => ({
-                headerShown: false,
-                tabBarIcon: ({ focused, color, size }) => {
-                    let iconName = '';
+        <NativeBaseProvider>
+            <NavigationContainer>
+                <Tab.Navigator screenOptions={({ route }) => ({
+                    headerShown: false,
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName = '';
 
-                    if (route.name == "HSHandler") iconName = 'home';
-                    if (route.name == "SSHandler") iconName = 'search';
-                    if (route.name == "NESHandler") iconName = 'plus-circle';
-                    if (route.name == "Bell") iconName = 'bell';
-                    if (route.name == "user") iconName = 'user';
+                        if (route.name == "HSHandler") iconName = 'home';
+                        if (route.name == "SSHandler") iconName = 'search';
+                        if (route.name == "NESHandler") iconName = 'plus-circle';
+                        if (route.name == "Notification") iconName = 'bell';
+                        if (route.name == "user") iconName = 'user';
 
-                    if (focused) {
-                        color = css.colors.dark;
+                        if (focused) {
+                            color = css.colors.primary;
+                        }
+                        else {
+                            color = css.colors.gray;
+                        }
+                        return <Icon name={iconName} size={size} color={color} />;
                     }
-                    else {
-                        color = css.colors.light_dark;
-                    }
-                    return <Icon name={iconName} size={size} color={color} />;
-                }
-            })}>
-                <Tab.Screen name="HSHandler" component={HSHandler} />
-                <Tab.Screen name="SSHandler" component={SSHandler} />
-                <Tab.Screen name="NESHandler" component={NESHandler} />
-                <Tab.Screen name="Bell" component={Bell} />
-                <Tab.Screen name="user" component={PSHandler} />
-            </Tab.Navigator>
-        </NavigationContainer>
+                })}>
+                    <Tab.Screen name="HSHandler" component={HSHandler} />
+                    <Tab.Screen name="SSHandler" component={SSHandler} />
+                    <Tab.Screen name="NESHandler" component={NESHandler} />
+                    <Tab.Screen name="Notification" component={NoSHandler} />
+                    <Tab.Screen name="user" component={PSHandler} />
+                </Tab.Navigator>
+            </NavigationContainer>
+        </NativeBaseProvider>
     );
 };
 

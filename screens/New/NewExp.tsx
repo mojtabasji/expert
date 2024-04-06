@@ -94,7 +94,7 @@ const NewExp = (props: any) => {
                             image.uri.indexOf('file') !== -1 &&
                             <View style={{
                                 borderWidth: 1,
-                                borderColor: css.colors.light_dark,
+                                borderColor: css.colors.black,
                                 borderRadius: 5,
                                 marginVertical: 20,
                             }}>
@@ -121,7 +121,7 @@ const NewExp = (props: any) => {
                         <TextInput style={[css.normalText, {
                             width: '100%',
                             borderBottomWidth: 1,
-                            borderColor: css.colors.light_dark,
+                            borderColor: css.colors.secondary,
                             borderRadius: 10,
                             paddingHorizontal: 10,
                             textAlign: 'justify',
@@ -132,7 +132,7 @@ const NewExp = (props: any) => {
                         <TextInput style={[css.normalText, {
                             width: '100%',
                             borderBottomWidth: 1,
-                            borderColor: css.colors.light_dark,
+                            borderColor: css.colors.secondary,
                             borderRadius: 10,
                             paddingHorizontal: 10,
                             textAlign: 'justify',
@@ -207,7 +207,7 @@ const NewExp = (props: any) => {
                         <Text>new Item add</Text>
                         <TextInput placeholder="new skill" style={{
                             borderBottomWidth: 1,
-                            borderColor: css.colors.light_dark,
+                            borderColor: css.colors.gray,
                             marginVertical: 10,
                         }} onChangeText={(text) => {
                             setNewSkill(text);
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: css.colors.light_dark,
+        borderColor: css.colors.black,
 
     },
 });

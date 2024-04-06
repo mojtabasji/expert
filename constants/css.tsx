@@ -4,27 +4,18 @@ import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 type colors = {
     primary: string,
     secondary: string,
-    success: string,
-    danger: string,
-    warning: string,
-    info: string,
-    light: string,
-    light_dark: string,
-    linkBlue: string,
-    dark: string,
+    third: string,
+    fourth: string,
+
     white: string,
+    middle: string,
     black: string,
+    dark: string,
     gray: string,
+    linkBlue: string,
     blue: string,
-    indigo: string,
-    purple: string,
-    pink: string,
+    light: string,
     red: string,
-    orange: string,
-    yellow: string,
-    green: string,
-    teal: string,
-    cyan: string,
 };
 
 
@@ -32,29 +23,22 @@ class css {
 
     static get colors(): colors {
         return {
-            primary: 'lightblue',
-            secondary: '#cdddf2',
-            success: '#000',
-            danger: '#000',
-            warning: '#000',
-            info: '#000',
-            light: '#000',
-            light_dark: '#aeaeae',
-            linkBlue: '#00A6FF',
+            primary: '#0C6980',
+            secondary: '#00A8A8',
+            third: '#2EB5E0',
+            fourth: '#C4DBE0',
+
+            white: '#fff',
+            middle: '#DDE5E7',
+            black: '#0B141D',
             dark: '#4b4b4b',
-            white: '#000',
-            black: '#202020',
-            gray: '#e8e8e8',
-            blue: '#006CFF',
-            indigo: '#000',
-            purple: '#000',
-            pink: '#000',
-            red: '#d63031',
-            orange: '#000',
-            yellow: '#000',
-            green: '#000',
-            teal: '#000',
-            cyan: '#1abc9c',
+            gray: '#7A828B',
+            light: '#F4F6F9',
+
+
+            linkBlue: '#00A6FF',
+            blue: '#027CFF',
+            red: '#FF0000',
         };
     }
 

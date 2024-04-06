@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Text, Image, Dimensions, ScrollView } from "react-native";
 
 import css from "../constants/css";
-import { Exp, Responses } from "../constants/Types";
+import { Exp, Response } from "../constants/Types";
 
 const ShowOne = (props: any) => {
 
@@ -14,7 +14,7 @@ const ShowOne = (props: any) => {
             avatar: ""
         }
     } as Exp);
-    const [response, setResponse] = useState([] as Responses[]);
+    const [response, setResponse] = useState([] as Response[]);
     const [scaled_height, setScaledHeight] = useState(300);
 
 

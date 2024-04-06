@@ -1,27 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Menu, Pressable, HamburgerIcon, Box } from 'native-base';
 
+import LoginHandler from '../../constants/LoginHandler';
 import css from '../../constants/css';
 import data, { top_users } from '../../assets/data';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import TabView from '../../constants/TabView';
+import { StorageHandler } from '../../constants/StorageHandler';
+
 
 const Profile = (Props: any) => {
     const [user, setUser] = useState(top_users[0]);
-    const [areaContent, setAreaContent] = useState("exp");
+    const [areaContent, setAreaContent] = useState("Exps");
     const [expContent, setExpContent] = useState([data[0]]);
 
+    const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
+
     useEffect(() => {
-        if (areaContent == "exp") {
+        if (areaContent == "Exps") {
             setExpContent([...data.slice(0, 2)]);
         } else {
             setExpContent([...data.slice(2, 4)]);
         }
     }, [areaContent]);
 
+    const LogOut = () => {
+        console.log("Log out");
+        StorageHandler.removeData("session_id").then(() => {
+            updateLoggedIn(false);
+        });
+    }
+
     return (
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.topArea}>
+                    <Icon name="arrow-left" size={30} color={css.colors.gray} style={{ position: "absolute", top: 10, left: 10 }}
+                        onPress={() => {
+                            Props.navigation.goBack();
+                        }}
+                    />
+                    <Box style={{ position: "absolute", top: 10, right: 10 }}>
+                        <Menu w="190" trigger={triggerProps => {
+                            return <Pressable {...triggerProps}>
+                                <HamburgerIcon size={10} />
+                            </Pressable>
+                        }}>
+                            <Menu.Item isDisabled>Sofia</Menu.Item>
+                            <Menu.Item onPress={()=>{
+                                Alert.alert("Log out", "Are you sure to log out?", [
+                                    {
+                                        text: "Yes",
+                                        onPress: LogOut,
+                                    },
+                                    {
+                                        text: "No",
+                                    }
+                                ]);
+                            }}>Log out</Menu.Item>
+                        </Menu>
+                    </Box>
                     <Text style={styles.topTitle}>Profile</Text>
                     {
                         user.avatar ?
@@ -31,15 +70,18 @@ const Profile = (Props: any) => {
                     }
                     <Text style={styles.name}>{user.fullname}</Text>
                     <Text style={styles.bio}>{user.bio}</Text>
-                    <TouchableOpacity style={styles.btn}>
-                        <Text style={styles.btnText}>Edit Profile</Text>
-                    </TouchableOpacity>
                 </View>
+                <TabView items={[{ name: "Exps" }, { name: "Answers" }]} onChange={(tabName) => {
+                    setAreaContent(tabName);
+                }}
+                    Colors={{
+                        backgroundColor: css.colors.primary,
+                        textColor: css.colors.white,
+                        itemColor: css.colors.light,
+                        selectedTextColor: css.colors.black,
+                    }}
+                />
                 <View style={styles.bottomArea}>
-                    <View style={styles.expTabAre}>
-                        <Icon name="comment-dots" size={30} color={areaContent == "exp" ? css.colors.info : css.colors.light_dark} onPress={() => setAreaContent("exp")} />
-                        <Icon name="reply" size={30} color={areaContent == "answer" ? css.colors.info : css.colors.light_dark} onPress={() => setAreaContent("answer")} />
-                    </View>
                     <View style={styles.expArea}>
                         {
                             expContent.map((item, index) => {
@@ -54,8 +96,13 @@ const Profile = (Props: any) => {
                                                 item.image &&
                                                 <Image source={{ uri: item.image }} style={{ width: "100%", height: 300, borderRadius: 15 }} />
                                             }
-                                            <Text style={styles.expTitle}>{item.title}</Text>
-                                            <Text>{item.content}</Text>
+                                            <View style={{
+                                                paddingHorizontal: 10,
+                                                paddingBottom: 10,
+                                            }}>
+                                                <Text style={styles.expTitle}>{item.title}</Text>
+                                                <Text>{item.content}</Text>
+                                            </View>
                                         </TouchableOpacity>
                                     </View>
                                 );
@@ -71,7 +118,7 @@ const Profile = (Props: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#ffffff",
+        backgroundColor: css.colors.white,
     },
     topArea: {
         width: "100%",
@@ -114,6 +161,7 @@ const styles = StyleSheet.create({
     },
     bottomArea: {
         flex: 1,
+        marginTop: 20,
     },
     bottomTitle: {
         fontSize: 20,
@@ -130,19 +178,9 @@ const styles = StyleSheet.create({
         color: "#202020",
         marginVertical: 10,
     },
-    expTabAre: {
-        width: "100%",
-        height: 50,
-        flexDirection: "row",
-        justifyContent: "space-around",
-        borderBottomColor: css.colors.light_dark,
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
-        alignItems: "center",
-    },
     expItem: {
         width: "100%",
-        backgroundColor: css.colors.gray,
+        backgroundColor: css.colors.middle,
         borderRadius: 15,
         marginBottom: 10,
         padding: 5,
