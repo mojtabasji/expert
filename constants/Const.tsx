@@ -20,6 +20,9 @@ export const api = {
     update_user_info: serverAddress + 'users/update',
     get_user_related_exps: serverAddress + 'exps/showuserrelated',
     add_exp_comment: serverAddress + 'exps/responses/add',
+    uploadProfileImage: serverAddress + 'users/profileupload', // POST
+    get_notifications: serverAddress + 'notifications', // GET
+    set_notification_read: serverAddress + 'notifications/read', // GET
 }
 
 

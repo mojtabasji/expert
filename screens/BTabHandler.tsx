@@ -38,7 +38,12 @@ const BTabHandler = () => {
                             color = css.colors.gray;
                         }
                         return <Icon name={iconName} size={size} color={color} />;
-                    }
+                    },
+                    tabBarActiveTintColor: css.colors.primary,
+                    tabBarStyle: {
+                        paddingVertical: 5,
+                        height: 55,
+                    },
                 })}>
                     <Tab.Screen name="HSHandler" component={HSHandler} />
                     <Tab.Screen name="SSHandler" component={SSHandler} />

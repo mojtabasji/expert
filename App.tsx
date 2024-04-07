@@ -22,7 +22,6 @@ function App(): React.JSX.Element {
     StorageHandler.retrieveData("session_id").then(data => {
       let session;
       session = data;
-      console.log("req url: ", api.is_auth_valid);
       axios.get(api.is_auth_valid, {
         headers: {
           Cookie: `session_id=${session};`

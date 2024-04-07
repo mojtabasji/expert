@@ -1,4 +1,4 @@
-import { Exp, User, Responses } from "../constants/Types";
+import { Exp, User, Response, Notification } from "../constants/Types";
 
 const data: Exp[] = [
     {
@@ -126,5 +126,67 @@ export const top_users: User[] = [
     },
 ];
 
+export const notifications: Notification[] = [
+    {
+        id: 1,
+        user: {
+            username: 'ali',
+            avatar: 'https://cdn.dribbble.com/users/594316/screenshots/16557702/media/d77aa195b67473edb6c386b355126078.jpg?resize=768x576&vertical=center',
+            id: 1,
+            phone: '09123456789',
+            bio: 'I am a software engineer and I have been working in the field for 5 years.',
+            fullname: "aliVali",
+        },
+        content: 'liked your response.',
+        created_at: '2022-09-17T08:00:00',
+        is_read: false,
+        exp: data[0],
+    },
+    {
+        id: 2,
+        user: {
+            username: 'mojtaba_sji',
+            avatar: 'https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp',
+            id: 2,
+            phone: '09123456789',
+            bio: 'I am a software engineer and I have been working in the field for 5 years.',
+            fullname: "mojtaba",
+        },
+        content: 'liked your response.',
+        created_at: '2022-09-17T08:00:00',
+        is_read: false,
+        exp: data[0],
+    },
+    {
+        id: 3,
+        user: {
+            username: 'Mammmadd1321',
+            avatar: 'https://cultivatedculture.com/wp-content/uploads/2019/12/LinkedIn-Profile-Picture-Example-Rachel-Montan%CC%83ez.jpeg',
+            id: 3,
+            phone: '09123456789',
+            bio: 'I am a software engineer and I have been working in the field for 5 years.',
+            fullname: "mamad",
+        },
+        content: 'liked your response.',
+        created_at: '2022-09-17T08:00:00',
+        is_read: false,
+        exp: data[0],
+    },
+    {
+        id: 4,
+        user: {
+            username: 'aliAlidari_1232',
+            avatar: 'https://cdn.dribbble.com/users/1355613/screenshots/15252730/media/28f348daf9654c440f5dcf398d8e097a.jpg?resize=768x576&vertical=center',
+            id: 4,
+            phone: '09123456789',
+            bio: 'I am a software engineer and I have been working in the field for 5 years.',
+            fullname: "ali",
+        },
+        content: 'liked your response.',
+        created_at: '2022-09-17T08:00:00',
+        is_read: true,
+        exp: data[1],
+    }
+];
 
 export default data;

@@ -44,9 +44,8 @@ const Login = (props: any) => {
             withCredentials: true,
         }).then(async (response) => {
             if (response.data.result == "true") {
-                console.log(response.data);
                 await StorageHandler.storeData("session_id", response.data.session_id).then(() => {console.log("session_id stored");});
-                StorageHandler.retrieveData("session_id").then(data => { console.log("session_id retrieved:", data); });
+                await StorageHandler.storeData("user_id", response.data.userId.toString()).then(() => {console.log("user_id stored");});
                 updateLoggedIn(true);                
             } else {
                 // alert("incorrect user password");
