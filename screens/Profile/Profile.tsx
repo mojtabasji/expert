@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { Menu, Pressable, HamburgerIcon, Box } from 'native-base';
+import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -25,7 +25,6 @@ const Profile = (Props: any) => {
     useEffect(() => {
         StorageHandler.retrieveData("session_id").then((session) => {
             StorageHandler.retrieveData("user_id").then((uid) => {
-                console.log(session, uid);
                 if (session) {
                     setSession_id(session);
                     axios.get(api.get_user_info + uid, {
@@ -62,7 +61,7 @@ const Profile = (Props: any) => {
                 setExpContent(response.data);
             }).catch((error) => { console.log(error); });
         }
-    }, [areaContent]);
+    }, [areaContent, session_id]);
 
     const uploadAvatar = () => {
         launchImageLibrary({
@@ -111,7 +110,8 @@ const Profile = (Props: any) => {
                     <Box style={{ position: "absolute", top: 10, right: 10 }}>
                         <Menu w="190" trigger={triggerProps => {
                             return <Pressable {...triggerProps}>
-                                <HamburgerIcon size={10} />
+                                {/* <HamburgerIcon size={10} /> */}
+                                <ThreeDotsIcon size={8} color={css.colors.primary} />
                             </Pressable>
                         }}>
                             <Menu.Item isDisabled>Sofia</Menu.Item>
@@ -249,6 +249,8 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 50,
         marginVertical: 10,
+        borderWidth: 1,
+        borderColor: css.colors.primary,
     },
     name: {
         fontSize: 20,

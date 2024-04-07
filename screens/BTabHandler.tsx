@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { NativeBaseProvider, Box } from "native-base";
@@ -25,9 +25,9 @@ const BTabHandler = () => {
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName = '';
 
-                        if (route.name == "HSHandler") iconName = 'home';
-                        if (route.name == "SSHandler") iconName = 'search';
-                        if (route.name == "NESHandler") iconName = 'plus-circle';
+                        if (route.name == "HSHandler") iconName = 'house';
+                        if (route.name == "SSHandler") iconName = 'magnifying-glass';
+                        if (route.name == "NESHandler") iconName = 'circle-question';
                         if (route.name == "Notification") iconName = 'bell';
                         if (route.name == "user") iconName = 'user';
 
@@ -37,9 +37,19 @@ const BTabHandler = () => {
                         else {
                             color = css.colors.gray;
                         }
-                        return <Icon name={iconName} size={size} color={color} />;
+                        return <Icon name={iconName} size={size} color={color}  solid={focused} light={!focused} />;
                     },
                     tabBarActiveTintColor: css.colors.primary,
+                    // tabBarShowLabel: false,
+                    tabBarLabel: ({ focused, color }) => {
+                        let name;
+                        if (route.name == "HSHandler") name = "Home";
+                        if (route.name == "SSHandler") name = "Search";
+                        if (route.name == "NESHandler") name = "New";
+                        if (route.name == "Notification") name = "Notif";
+                        if (route.name == "user") name = "User";
+                        return <Text style={{ color: color, fontSize: 12, textAlign: 'center' }}>{name}</Text>
+                    },
                     tabBarStyle: {
                         paddingVertical: 5,
                         height: 55,

@@ -112,7 +112,7 @@ const Home = (props: any) => {
                     <View style={{
                         width: '100%',
                         height: 100,
-                        borderBottomColor: css.colors.gray,
+                        borderBottomColor: css.colors.primary,
                         borderBottomWidth: 1,
                     }} >
                         <ScrollView horizontal={true} >
