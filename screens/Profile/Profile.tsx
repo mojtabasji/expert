@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
+import {  } from '../../constants/Components';
 import LoginHandler from '../../constants/LoginHandler';
 import css from '../../constants/css';
 import data, { top_users } from '../../assets/data';
@@ -111,7 +112,7 @@ const Profile = (Props: any) => {
                         <Menu w="190" trigger={triggerProps => {
                             return <Pressable {...triggerProps}>
                                 {/* <HamburgerIcon size={10} /> */}
-                                <ThreeDotsIcon size={8} color={css.colors.primary} />
+                                <ThreeDotsIcon size={8} color={css.colors.fourth} />
                             </Pressable>
                         }}>
                             <Menu.Item isDisabled>Sofia</Menu.Item>
@@ -121,7 +122,7 @@ const Profile = (Props: any) => {
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("SkillsEdit", { user: user });
                             }}>Edit Skills</Menu.Item>
-                            <Menu.Item style={{ borderTopWidth: 1, borderTopColor: css.colors.middle }} onPress={() => {
+                            <Menu.Item style={{ borderTopWidth: 1, borderTopColor: css.colors.fourth }} onPress={() => {
                                 Alert.alert("Log out", "Are you sure to log out?", [
                                     {
                                         text: "Yes",
@@ -185,10 +186,10 @@ const Profile = (Props: any) => {
                     setAreaContent(tabName);
                 }}
                     Colors={{
-                        backgroundColor: css.colors.primary,
+                        backgroundColor: css.colors.third,
                         textColor: css.colors.white,
-                        itemColor: css.colors.light,
-                        selectedTextColor: css.colors.black,
+                        itemColor: css.colors.fifth,
+                        selectedTextColor: css.colors.primary,
                     }}
                 />
                 <View style={styles.bottomArea}>
@@ -229,7 +230,8 @@ const Profile = (Props: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: css.colors.white,
+        backgroundColor: css.colors.secondary,
+        color: css.colors.white,
     },
     topArea: {
         width: "100%",
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
     },
     topTitle: {
         fontSize: 20,
-        color: "#202020",
+        color: css.colors.white,
         marginHorizontal: 10,
         marginVertical: 10,
         alignSelf: "flex-start",
@@ -250,21 +252,21 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginVertical: 10,
         borderWidth: 1,
-        borderColor: css.colors.primary,
+        borderColor: css.colors.fourth,
     },
     name: {
         fontSize: 20,
-        color: "#202020",
+        color: css.colors.white,
         marginVertical: 10,
     },
     bio: {
         fontSize: 15,
-        color: "#202020",
+        color: css.colors.white,
         marginVertical: 10,
     },
     btnText: {
         fontSize: 16,
-        color: css.colors.black,
+        color: css.colors.fourth,
     },
     bottomArea: {
         flex: 1,
@@ -287,7 +289,7 @@ const styles = StyleSheet.create({
     },
     expItem: {
         width: "100%",
-        backgroundColor: css.colors.middle,
+        backgroundColor: css.colors.fourth,
         borderRadius: 15,
         marginBottom: 10,
         padding: 5,

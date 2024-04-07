@@ -6,6 +6,7 @@ type colors = {
     secondary: string,
     third: string,
     fourth: string,
+    fifth: string,
 
     white: string,
     middle: string,
@@ -23,10 +24,17 @@ class css {
 
     static get colors(): colors {
         return {
-            primary: '#0C6980',
-            secondary: '#00A8A8',
-            third: '#2EB5E0',
-            fourth: '#C4DBE0',
+            // primary: '#0C6980',
+            // secondary: '#00A8A8',
+            // third: '#2EB5E0',
+            // fourth: '#C4DBE0',
+            // fifth: '#F4F6F9',
+
+            primary: '#121F2D',
+            secondary: '#263546',
+            third: '#718C93',
+            fourth: '#D9D7D2',
+            fifth: '#68DBCC',
 
             white: '#fff',
             middle: '#DDE5E7',

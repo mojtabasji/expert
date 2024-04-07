@@ -112,8 +112,8 @@ const Home = (props: any) => {
                     <View style={{
                         width: '100%',
                         height: 100,
-                        borderBottomColor: css.colors.primary,
-                        borderBottomWidth: 1,
+                        borderBottomColor: css.colors.fourth,
+                        borderBottomWidth: 2,
                     }} >
                         <ScrollView horizontal={true} >
                             {
@@ -134,8 +134,8 @@ const Home = (props: any) => {
                                                 width: 80,
                                                 height: 80,
                                                 borderRadius: 40,
-                                                borderWidth: 2,
-                                                borderColor: css.colors.secondary,
+                                                borderWidth: 1,
+                                                borderColor: css.colors.fourth,
                                             }} />
                                         </TouchableOpacity>
                                     );
@@ -154,10 +154,11 @@ const Home = (props: any) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: css.colors.secondary,
     },
     itemArea: {
-        backgroundColor: css.colors.middle,
+        backgroundColor: css.colors.fourth,
         borderRadius: 15,
         marginTop: 15,
         width: "95%",
@@ -167,6 +168,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 20,
         marginHorizontal: 10,
+        borderWidth: 1,
+        borderColor: css.colors.fourth,
     }
 });
 

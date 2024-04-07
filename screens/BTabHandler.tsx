@@ -32,14 +32,14 @@ const BTabHandler = () => {
                         if (route.name == "user") iconName = 'user';
 
                         if (focused) {
-                            color = css.colors.primary;
+                            color = css.colors.fifth;
                         }
                         else {
-                            color = css.colors.gray;
+                            color = css.colors.fourth;
                         }
                         return <Icon name={iconName} size={size} color={color}  solid={focused} light={!focused} />;
                     },
-                    tabBarActiveTintColor: css.colors.primary,
+                    tabBarActiveTintColor: css.colors.fifth,
                     // tabBarShowLabel: false,
                     tabBarLabel: ({ focused, color }) => {
                         let name;
@@ -53,6 +53,7 @@ const BTabHandler = () => {
                     tabBarStyle: {
                         paddingVertical: 5,
                         height: 55,
+                        backgroundColor: css.colors.primary,
                     },
                 })}>
                     <Tab.Screen name="HSHandler" component={HSHandler} />
