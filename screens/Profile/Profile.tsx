@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl } from 'react-native';
 import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import LinearGradient from 'react-native-linear-gradient';
+import { Shadow } from 'react-native-shadow-2';
 
-import {  } from '../../constants/Components';
+import { } from '../../constants/Components';
 import LoginHandler from '../../constants/LoginHandler';
 import css from '../../constants/css';
 import data, { top_users } from '../../assets/data';
 import TabView from '../../constants/TabView';
 import { StorageHandler } from '../../constants/StorageHandler';
 import { api } from '../../constants/Const';
-import { Exp } from '../../constants/Types';
+import { Exp, Skill } from '../../constants/Types';
 
 
 const Profile = (Props: any) => {
@@ -22,8 +24,10 @@ const Profile = (Props: any) => {
 
     const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
     const [session_id, setSession_id] = useState("");
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
+        setRefreshing(false);
         StorageHandler.retrieveData("session_id").then((session) => {
             StorageHandler.retrieveData("user_id").then((uid) => {
                 if (session) {
@@ -63,6 +67,25 @@ const Profile = (Props: any) => {
             }).catch((error) => { console.log(error); });
         }
     }, [areaContent, session_id]);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        StorageHandler.retrieveData("session_id").then((session) => {
+            StorageHandler.retrieveData("user_id").then((uid) => {
+                if (session) {
+                    setSession_id(session);
+                    axios.get(api.get_user_info + uid, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Cookie': `session_id=${session}`
+                        }
+                    }).then((response) => {
+                        setUser(response.data);
+                    }).catch((error) => { console.log(error); });
+                }
+            });
+        }).then(() => { setRefreshing(false); });
+    };
 
     const uploadAvatar = () => {
         launchImageLibrary({
@@ -105,14 +128,21 @@ const Profile = (Props: any) => {
     }
 
     return (
-        <View style={styles.container}>
-            <ScrollView>
+        <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        progressViewOffset={100} // Adjust the offset as needed for the elastic effect
+                    />
+                }>
                 <View style={styles.topArea}>
                     <Box style={{ position: "absolute", top: 10, right: 10 }}>
                         <Menu w="190" trigger={triggerProps => {
                             return <Pressable {...triggerProps}>
                                 {/* <HamburgerIcon size={10} /> */}
-                                <ThreeDotsIcon size={8} color={css.colors.fourth} />
+                                <ThreeDotsIcon size={8} color={css.redesign.darker} />
                             </Pressable>
                         }}>
                             <Menu.Item isDisabled>Sofia</Menu.Item>
@@ -142,13 +172,13 @@ const Profile = (Props: any) => {
                         <TouchableOpacity onPress={uploadAvatar}>
                             {
                                 user.avatar ?
-                                    <Image style={styles.avatar} source={{ uri: user.avatar }} />
+                                    <Image style={styles.avatar} source={{ uri: user.avatar }} alt='' />
                                     :
-                                    <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
+                                    <Image style={styles.avatar} alt='' source={require('../../assets/images/user_avatar.png')} />
                             }
                             <View style={{
                                 position: "absolute", bottom: 10, right: 0,
-                                backgroundColor: css.colors.primary,
+                                backgroundColor: css.redesign.darker,
                                 padding: 8,
                                 borderRadius: 16,
                                 justifyContent: "center",
@@ -181,15 +211,36 @@ const Profile = (Props: any) => {
                     </View>
                     <Text style={styles.name}>{user.fullname}</Text>
                     <Text style={styles.bio}>{user.bio}</Text>
+                    <View style={styles.skillsArea}>
+                        {
+                            user.skills && user.skills.map((item, index) => {
+                                return (
+                                    <View style={{ margin: 5 }} key={index}>
+                                        <Shadow style={{
+                                            borderRadius: 20,
+                                            backgroundColor: css.redesign.lightest,
+                                        }} distance={10}>
+                                            <Text style={{
+                                                marginHorizontal: 10,
+                                                marginVertical: 5,
+                                                color: css.redesign.darker,
+                                                textAlign: "center",
+                                            }}>{item.name}</Text>
+                                        </Shadow>
+                                    </View>
+                                );
+                            })
+                        }
+                    </View>
                 </View>
                 <TabView items={[{ name: "Exps" }, { name: "Answers" }]} onChange={(tabName) => {
                     setAreaContent(tabName);
                 }}
                     Colors={{
-                        backgroundColor: css.colors.third,
-                        textColor: css.colors.white,
-                        itemColor: css.colors.fifth,
-                        selectedTextColor: css.colors.primary,
+                        backgroundColor: css.redesign.gray,
+                        textColor: css.redesign.lightest,
+                        itemColor: css.redesign.darker,
+                        selectedTextColor: css.redesign.lightest,
                     }}
                 />
                 <View style={styles.bottomArea}>
@@ -199,23 +250,29 @@ const Profile = (Props: any) => {
                                 expContent.map((item, index) => {
                                     return (
                                         <View key={index}>
-                                            <TouchableOpacity style={styles.expItem}
-                                                onPress={() => {
-                                                    Props.navigation.navigate("PShowOneExp", { exp: item });
-                                                }}
-                                            >
-                                                {
-                                                    item.image &&
-                                                    <Image source={{ uri: item.image }} style={{ width: "100%", height: 300, borderRadius: 15 }} />
-                                                }
-                                                <View style={{
-                                                    paddingHorizontal: 10,
-                                                    paddingBottom: 10,
-                                                }}>
-                                                    <Text style={styles.expTitle}>{item.title}</Text>
-                                                    <Text>{item.content}</Text>
-                                                </View>
-                                            </TouchableOpacity>
+                                            <Shadow style={{
+                                                marginBottom: 20
+                                            }} distance={10} >
+                                                <TouchableOpacity style={styles.expItem}
+                                                    onPress={() => {
+                                                        console.log(item.image);
+                                                        Props.navigation.navigate("PShowOneExp", { exp: item });
+                                                    }}
+                                                >
+                                                    {
+                                                        item.image &&
+                                                        <Image source={{ uri: item.image }} alt='' style={{ width: Dimensions.get("window").width - 20, height: 300, borderTopLeftRadius: 15, borderTopRightRadius: 15 }} />
+                                                    }
+                                                    <View style={{
+                                                        width: Dimensions.get("window").width - 20,
+                                                        paddingHorizontal: 10,
+                                                        paddingBottom: 10,
+                                                    }}>
+                                                        <Text style={styles.expTitle}>{item.title}</Text>
+                                                        <Text>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </Shadow>
                                         </View>
                                     );
                                 })
@@ -223,15 +280,14 @@ const Profile = (Props: any) => {
                     </View>
                 </View>
             </ScrollView>
-        </View>
+        </LinearGradient >
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: css.colors.secondary,
-        color: css.colors.white,
+        backgroundColor: css.redesign.primary,
     },
     topArea: {
         width: "100%",
@@ -241,7 +297,8 @@ const styles = StyleSheet.create({
     },
     topTitle: {
         fontSize: 20,
-        color: css.colors.white,
+        fontWeight: "bold",
+        color: css.redesign.darker,
         marginHorizontal: 10,
         marginVertical: 10,
         alignSelf: "flex-start",
@@ -252,21 +309,27 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginVertical: 10,
         borderWidth: 1,
-        borderColor: css.colors.fourth,
+        borderColor: css.redesign.darker,
     },
     name: {
         fontSize: 20,
-        color: css.colors.white,
+        fontWeight: "bold",
+        color: css.redesign.darker,
         marginVertical: 10,
     },
     bio: {
         fontSize: 15,
-        color: css.colors.white,
+        color: css.redesign.darker,
         marginVertical: 10,
+    },
+    skillsArea: {
+        flexDirection: "row",
+        flexWrap: "wrap",
     },
     btnText: {
         fontSize: 16,
-        color: css.colors.fourth,
+        fontWeight: "bold",
+        color: css.redesign.darker,
     },
     bottomArea: {
         flex: 1,
@@ -284,15 +347,16 @@ const styles = StyleSheet.create({
     },
     expTitle: {
         fontSize: 20,
+        fontWeight: "bold",
         color: "#202020",
         marginVertical: 10,
     },
     expItem: {
         width: "100%",
-        backgroundColor: css.colors.fourth,
+        maxHeight: 550,
+        overflow: "hidden",
+        backgroundColor: css.redesign.lightest,
         borderRadius: 15,
-        marginBottom: 10,
-        padding: 5,
     },
 });
 

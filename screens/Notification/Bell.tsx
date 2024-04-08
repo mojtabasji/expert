@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { notifications } from '../../assets/data';
 import { Notification } from '../../constants/types';
@@ -29,7 +30,7 @@ const Bell = (Props: any) => {
     }
 
     return (
-        <View style={styles.container}>
+        <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
             <ScrollView style={{ width: '100%' }}>
                 <View style={{ width: '100%', alignItems: 'center', }}>
                     {
@@ -65,7 +66,7 @@ const Bell = (Props: any) => {
                     }
                 </View>
             </ScrollView>
-        </View>
+        </LinearGradient>
     );
 }
 

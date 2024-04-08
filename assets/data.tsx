@@ -1,4 +1,4 @@
-import { Exp, User, Response, Notification } from "../constants/Types";
+import { Exp, User, Response, Notification, Skill } from "../constants/Types";
 
 const data: Exp[] = [
     {
@@ -87,6 +87,49 @@ const data: Exp[] = [
     },
 ];
 
+export const skills: Skill[] = [
+    {
+        id: 1,
+        name: 'Java',
+    },
+    {
+        id: 2,
+        name: 'Kotlin',
+    },
+    {
+        id: 3,
+        name: 'Swift',
+    },
+    {
+        id: 4,
+        name: 'Objective-C',
+    },
+    {
+        id: 5,
+        name: 'React Native',
+    },
+    {
+        id: 6,
+        name: 'Flutter',
+    },
+    {
+        id: 7,
+        name: 'Python',
+    },
+    {
+        id: 8,
+        name: 'JavaScript',
+    },
+    {
+        id: 9,
+        name: 'C++',
+    },
+    {
+        id: 10,
+        name: 'C#',
+    },
+];
+
 export const top_users: User[] = [
     {
         username: 'ali',
@@ -96,6 +139,7 @@ export const top_users: User[] = [
         bio: 'I am a software engineer and I have been working in the field for 5 years.',
         fullname: "aliVali",
         phone: '09123456789',
+        skills: skills.slice(0, 3),
     },
     {
         username: 'mojtaba_sji',
@@ -105,6 +149,7 @@ export const top_users: User[] = [
         bio: 'I am a software engineer and I have been working in the field for 5 years.',
         fullname: "mojtaba",
         phone: '09123456789',
+        skills: skills.slice(3, 6),
     },
     {
         username: 'Mammmadd1321',
@@ -114,6 +159,7 @@ export const top_users: User[] = [
         bio: 'I am a software engineer and I have been working in the field for 5 years.',
         fullname: "mamad",
         phone: '09123456789',
+        skills: skills.slice(6, 9),
     },
     {
         username: 'aliAlidari_1232',
@@ -123,6 +169,7 @@ export const top_users: User[] = [
         bio: 'I am a software engineer and I have been working in the field for 5 years.',
         fullname: "ali",
         phone: '09123456789',
+        skills: skills.slice(9, 10),
     },
 ];
 

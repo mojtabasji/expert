@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TextInput, ScrollView, Dimensions, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import css from '../../constants/css';
+import LinearGradient from 'react-native-linear-gradient';
 
 import data from '../../assets/data';
 
@@ -9,10 +10,11 @@ const Search = (props: any) => {
 
 
     return (
-        <View style={styles.container}>
+        <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
             <View style={styles.searchArea}>
                 <TextInput style={{
-                    width: "85%"
+                    width: "85%",
+                    paddingHorizontal: 20,
                 }}>
                 </TextInput>
                 <Icon name="search" size={27} style={{
@@ -21,39 +23,39 @@ const Search = (props: any) => {
                     alignSelf: 'center',
                     textAlign: 'center',
                     textAlignVertical: 'center',
-                }} />
+                }} color={css.redesign.darker} />
             </View>
             <ScrollView style={{
-                paddingTop:15
+                paddingTop: 15
             }}>
                 {
                     data.map((item, index) => {
                         return (
                             <TouchableOpacity key={index} style={{
-                                flexDirection:'row',
-                                alignItems:'center',
+                                flexDirection: 'row',
+                                alignItems: 'center',
                                 width: Dimensions.get('window').width * 0.9,
-                                paddingVertical:7,
-                                borderBottomWidth:1,
-                                borderBottomColor: css.colors.light_dark,
+                                paddingVertical: 12,
+                                borderBottomWidth: 1,
+                                borderBottomColor: css.redesign.primary,
                             }}
-                            onPress={()=>{
-                                props.navigation.navigate("SShowOneExp", { exp: item });
-                            }}
+                                onPress={() => {
+                                    props.navigation.navigate("SShowOneExp", { exp: item });
+                                }}
                             >
                                 {
-                                   item.user.avatar ?
-                                   <Image style={styles.avatar} source={{ uri: item.user.avatar }} />
-                                   :
-                                   <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
+                                    item.user.avatar ?
+                                        <Image style={styles.avatar} source={{ uri: item.user.avatar }} />
+                                        :
+                                        <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
                                 }
-                                <Text style={[css.smallText, {textAlign:"justify"}]}>{item.title}</Text>
+                                <Text style={[css.smallText, { textAlign: "justify" }]}>{item.title}</Text>
                             </TouchableOpacity>
                         );
                     })
                 }
             </ScrollView>
-        </View>
+        </LinearGradient>
     );
 }
 
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 10
+        paddingTop: 20
     },
     searchArea: {
         flexDirection: 'row',
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         borderWidth: 1,
-        borderColor: css.colors.light_dark,
+        borderColor: css.redesign.gray,
     },
     avatar: {
         width: 40,

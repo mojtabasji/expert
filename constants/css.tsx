@@ -21,6 +21,29 @@ type colors = {
 
 
 class css {
+    static redesign: {
+        darker: string,
+        primary: string,
+        secondary: string,
+        lightest: string,
+
+        supplement: string,
+        supplement2: string,
+
+        gray: string,
+        black: string,
+    } = {
+        darker: '#27353B',
+        primary: '#D8E6E1',
+        secondary: '#FCF7EC',
+        lightest: '#F9F9F9',
+        
+        supplement: '#F68F5F',
+        supplement2: '#FF4B4D',
+
+        gray: '#A9A7A0',
+        black: '#252525',
+    };
 
     static get colors(): colors {
         return {
@@ -70,12 +93,20 @@ class css {
         };
     }
 
+    static get titleText(): object {
+        return {
+            fontFamily: 'IRANSansMobile',
+            fontSize: RFValue(18),
+            color: '#000',
+            fontWeight: '600',
+        };
+    }
+
     static get normalText(): object {
         return {
             fontFamily: 'IRANSansMobile',
             fontSize: RFValue(16),
             color: '#000',
-            textAlign: 'center',
             fontWeight: '600',
         };
     }
@@ -85,7 +116,6 @@ class css {
             fontFamily: 'IRANSansMobile',
             fontSize: RFValue(14),
             color: '#000',
-            textAlign: 'center',
             fontWeight: '500',
         };
     }

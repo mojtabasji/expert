@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView
 import css from '../../constants/css';
 import { api } from '../../constants/Const';
 import axios from 'axios';
-
+import LinearGradient from 'react-native-linear-gradient';
+import { Shadow } from 'react-native-shadow-2';
 
 import { StorageHandler } from '../../constants/StorageHandler';
 import { Exp, User } from '../../constants/Types';
@@ -59,40 +60,46 @@ const Home = (props: any) => {
             scaled_height = (height_ * Dimensions.get('window').width * 0.95) / width_;
         });
         return (
-            <TouchableOpacity style={styles.itemArea} key={index}
-                onPress={() => {
-                    change_screen("ShowOneExp", { exp: exps[index] });
-                }}
-            >
-                {
-                    image_uri &&
-                    <Image source={{ uri: image_uri }} style={{
-                        width: '100%',
-                        height: scaled_height,
-                        // borderRadius: 15,
-                        borderTopLeftRadius: 15,
-                        borderTopRightRadius: 15,
-                    }} />
-                }
-                <View style={{ flexDirection: 'row-reverse', alignItems: 'center', position: 'absolute', right: 0, top: 10 }}>
-                    {
-                        item.user?.avatar ?
-                            <Image style={styles.avatar} source={{ uri: item.user?.avatar }} />
-                            :
-                            <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
-                    }
-                    <Text style={css.minimalText}>{item.user?.username}</Text>
-                </View>
-                <View style={{ marginBottom: 10, paddingHorizontal: 10,paddingBottom:10 }}>
-                    <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10 }}>{item.title}</Text>
-                    <Text style={{ marginTop: 10, textAlign: "justify", }}>{item.content}</Text>
-                </View>
-            </TouchableOpacity>
+            <View key={index}>
+                <Shadow style={{
+                    marginBottom: 20
+                }} distance={10} >
+                    <TouchableOpacity style={styles.itemArea}
+                        onPress={() => {
+                            change_screen("ShowOneExp", { exp: exps[index] });
+                        }}
+                    >
+                        {
+                            image_uri &&
+                            <Image source={{ uri: image_uri }} style={{
+                                width: '100%',
+                                height: scaled_height,
+                                // borderRadius: 15,
+                                borderTopLeftRadius: 15,
+                                borderTopRightRadius: 15,
+                            }} />
+                        }
+                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', position: 'absolute', right: 0, top: 10 }}>
+                            {
+                                item.user?.avatar ?
+                                    <Image style={styles.avatar} source={{ uri: item.user?.avatar }} />
+                                    :
+                                    <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
+                            }
+                            <Text style={css.minimalText}>{item.user?.username}</Text>
+                        </View>
+                        <View style={{ marginBottom: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
+                            <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold" }}>{item.title}</Text>
+                            <Text style={{ marginTop: 10, }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Shadow>
+            </View>
         );
     }
 
     return (
-        <View style={styles.container} >
+        <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
             <ScrollView style={{
                 width: '100%',
                 height: '100%',
@@ -143,12 +150,17 @@ const Home = (props: any) => {
                             }
                         </ScrollView>
                     </View>
+                    <View style={{
+                        flex:1,
+                        marginTop: 15,
+                    }}>
                     {
                         exps.map((item, index) => render_items(item, index))
                     }
+                    </View>
                 </View>
             </ScrollView>
-        </View>
+        </LinearGradient>
     );
 }
 
@@ -158,10 +170,9 @@ const styles = StyleSheet.create({
         backgroundColor: css.colors.secondary,
     },
     itemArea: {
-        backgroundColor: css.colors.fourth,
+        backgroundColor: css.redesign.lightest,
         borderRadius: 15,
-        marginTop: 15,
-        width: "95%",
+        width: Dimensions.get('window').width -20,
     },
     avatar: {
         width: 40,

@@ -13,7 +13,7 @@ export type User = {
     username: string,
     fullname: string,
     avatar: string,
-    skills?: undefined,
+    skills?: Skill[],
     phone: string,
     bio: string | null
 }

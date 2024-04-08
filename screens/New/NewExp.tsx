@@ -8,6 +8,7 @@ import { Exp, User, Skill } from "../../constants/Types";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Icon from "react-native-vector-icons/FontAwesome5";
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import LinearGradient from "react-native-linear-gradient";
 
 
 const NewExp = (props: any) => {
@@ -84,7 +85,7 @@ const NewExp = (props: any) => {
 
     return (
         <TouchableWithoutFeedback onPress={() => setShowPopup(false)}>
-            <View style={styles.container}>
+            <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
                 <ScrollView keyboardShouldPersistTaps="handled">
                     <View>
                         <TouchableOpacity onPress={chooseImage}>
@@ -234,7 +235,7 @@ const NewExp = (props: any) => {
                         }} />
                     </View>
                 }
-            </View>
+            </LinearGradient>
         </TouchableWithoutFeedback>
     );
 }

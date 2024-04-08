@@ -25,21 +25,21 @@ const BTabHandler = () => {
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName = '';
 
-                        if (route.name == "HSHandler") iconName = 'house';
-                        if (route.name == "SSHandler") iconName = 'magnifying-glass';
+                        if (route.name == "HSHandler") iconName = 'comments';
+                        if (route.name == "SSHandler") iconName = 'sun';    // sun, square-minus, 
                         if (route.name == "NESHandler") iconName = 'circle-question';
                         if (route.name == "Notification") iconName = 'bell';
                         if (route.name == "user") iconName = 'user';
 
                         if (focused) {
-                            color = css.colors.fifth;
+                            color = css.redesign.darker;
                         }
                         else {
-                            color = css.colors.fourth;
+                            color = css.redesign.darker;
                         }
                         return <Icon name={iconName} size={size} color={color}  solid={focused} light={!focused} />;
                     },
-                    tabBarActiveTintColor: css.colors.fifth,
+                    tabBarActiveTintColor: css.redesign.darker,
                     // tabBarShowLabel: false,
                     tabBarLabel: ({ focused, color }) => {
                         let name;
@@ -53,7 +53,7 @@ const BTabHandler = () => {
                     tabBarStyle: {
                         paddingVertical: 5,
                         height: 55,
-                        backgroundColor: css.colors.primary,
+                        backgroundColor: css.redesign.primary,
                     },
                 })}>
                     <Tab.Screen name="HSHandler" component={HSHandler} />
