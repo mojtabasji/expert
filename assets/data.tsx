@@ -14,6 +14,7 @@ const data: Exp[] = [
         content: 'What programming language is commonly used for Android app development?',
         responses: [
             {
+                id: 1,
                 user: {
                     username: 'mojtaba_sji',
                     avatar: 'https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp',
@@ -23,10 +24,11 @@ const data: Exp[] = [
                     fullname: "mojtaba",
                 },
                 content: 'Synchronous programming involves executing tasks one after the other, while asynchronous programming allows tasks to run independently and notifies the main program when they are done.',
-                likes: 11,
-                dislikes: 2,
+                likes: [1, 2],
+                dislikes: [3, 4],
             },
             {
+                id: 2,
                 user: {
                     username: 'aliAlidari_1232',
                     avatar: 'https://cdn.dribbble.com/users/1355613/screenshots/15252730/media/28f348daf9654c440f5dcf398d8e097a.jpg?resize=768x576&vertical=center',
@@ -36,8 +38,8 @@ const data: Exp[] = [
                     fullname: "ali",
                 },
                 content: 'Java and Kotlin are commonly used for Android app development.',
-                likes: 10,
-                dislikes: 2,
+                likes: [1, 2],
+                dislikes: [3, 4],
             }
         ],
         title: 'Android app development',

@@ -14,6 +14,7 @@ export const api = {
     skills_add: serverAddress + 'skills/add', // add new skill to skills table
     get_user_skills: serverAddress + 'users/skills',    // GET
     add_skill_to_user: serverAddress + 'users/skills/add', // POST
+    remove_skill_from_user: serverAddress + 'users/skills/remove', // POST
     my_exps: serverAddress + 'exps/myexps',
     show_exp: serverAddress + 'exps/show',
     get_user_info: serverAddress + 'users/show/',
@@ -23,6 +24,7 @@ export const api = {
     uploadProfileImage: serverAddress + 'users/profileupload', // POST
     get_notifications: serverAddress + 'notifications', // GET
     set_notification_read: serverAddress + 'notifications/read', // GET
+    changeLikeState: serverAddress + 'exps/responses/like', // POST
 }
 
 

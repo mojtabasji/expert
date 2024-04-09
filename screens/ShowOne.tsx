@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Text, Image, Dimensions, ScrollView, TextInput } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
+import Icon from "react-native-vector-icons/FontAwesome6";
+import axios from "axios";
 
 import css from "../constants/css";
-import { Exp, Response } from "../constants/Types";
-import Icon from "react-native-vector-icons/FontAwesome6";
+import { Exp, Response, User } from "../constants/Types";
+import { StorageHandler } from "../constants/StorageHandler";
+import { api } from "../constants/Const";
 
 const ShowOne = (props: any) => {
 
@@ -20,10 +23,14 @@ const ShowOne = (props: any) => {
     const [response, setResponse] = useState([] as Response[]);
     const [scaled_height, setScaledHeight] = useState(0);
     const [comment, setComment] = useState('' as string);
+    const [loggedUserId, setLoggedUserId] = useState(-1 as number);
 
 
     useEffect(() => {
         setExp(props.route.params.exp);
+        StorageHandler.retrieveData("user_id").then((value) => {
+            if (value) setLoggedUserId(parseInt(value));
+        });
     }, []);
 
     useEffect(() => {
@@ -38,6 +45,46 @@ const ShowOne = (props: any) => {
     const sendCommnet = () => {
         console.log("send comment");
     }
+
+    const changeLikeState = (resp: Response, type: "LIKE" | "DISLIKE", command: "ADD" | "REMOVE") => {
+        let form = new FormData();
+        form.append("response_id", resp.id.toString());
+        form.append("type", type);
+        form.append("command", command);
+        axios.post(api.changeLikeState, form).then((res) => {
+            let data = res.data;
+            if (data.result === "true") {
+                let newResponse = response.map((item: Response) => {
+                    if (item.id === resp.id) {
+                        if (type === "LIKE") {
+                            if (command === "ADD") {
+                                item.likes.push(loggedUserId);
+                                if (item.dislikes.includes(loggedUserId)) {
+                                    item.dislikes = item.dislikes.filter((id) => id !== loggedUserId);
+                                }
+                            } else {
+                                item.likes = item.likes.filter((id) => id !== loggedUserId);
+                            }
+                        } else {
+                            if (command === "ADD") {
+                                item.dislikes.push(loggedUserId);
+                                if (item.likes.includes(loggedUserId)) {
+                                    item.likes = item.likes.filter((id) => id !== loggedUserId);
+                                }
+                            } else {
+                                item.dislikes = item.dislikes.filter((id) => id !== loggedUserId);
+                            }
+                        }
+                    }
+                    return item;
+                });
+                setResponse(newResponse);
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
 
     return (
         <View style={styles.container}>
@@ -111,6 +158,19 @@ const ShowOne = (props: any) => {
                                                             <Image style={styles.avatar} source={require('../assets/images/user_avatar.png')} />
                                                     }
                                                     <Text style={[css.smallText, { marginLeft: 10 }]}>{item.user.username}</Text>
+                                                    <View style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        position: 'absolute',
+                                                        right: 10,
+                                                    }}>
+                                                        <Text style={[css.smallText, { marginLeft: 10 }]}>{item.likes.length}</Text>
+                                                        <Icon name="thumbs-up" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.likes.includes(loggedUserId)}
+                                                        onPress={()=>{changeLikeState(item, "LIKE", item.likes.includes(loggedUserId) ? "REMOVE" : "ADD")}} />
+                                                        <Text style={[css.smallText, { marginLeft: 10 }]}>{item.dislikes.length}</Text>
+                                                        <Icon name="thumbs-down" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.dislikes.includes(loggedUserId)}
+                                                        onPress={()=>{changeLikeState(item, "DISLIKE", item.dislikes.includes(loggedUserId) ? "REMOVE" : "ADD")}} />
+                                                    </View>
                                                 </View>
                                                 <Text style={[css.smallText, { paddingTop: 15 }]}>{item.content}</Text>
                                             </View>
@@ -124,9 +184,9 @@ const ShowOne = (props: any) => {
             </ScrollView>
             <View style={styles.commentArea}>
 
-                <TextInput onChangeText={(text)=>{setComment(text)}} multiline={true} style={styles.input} placeholder="نظر خود را بنویسید" />
-                <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-                <Icon name="paper-plane" size={25} solid={true} color={css.redesign.darker} onPress={sendCommnet} />
+                <TextInput onChangeText={(text) => { setComment(text) }} multiline={true} style={styles.input} placeholder="نظر خود را بنویسید" />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Icon name="paper-plane" size={25} solid={true} color={css.redesign.darker} onPress={sendCommnet} />
                 </View>
             </View>
         </View>

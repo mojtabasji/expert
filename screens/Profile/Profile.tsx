@@ -14,11 +14,11 @@ import data, { top_users } from '../../assets/data';
 import TabView from '../../constants/TabView';
 import { StorageHandler } from '../../constants/StorageHandler';
 import { api } from '../../constants/Const';
-import { Exp, Skill } from '../../constants/Types';
+import { Exp, Skill, User } from '../../constants/Types';
 
 
 const Profile = (Props: any) => {
-    const [user, setUser] = useState(top_users[0]);
+    const [user, setUser] = useState(top_users[0] as User);
     const [areaContent, setAreaContent] = useState("Exps");
     const [expContent, setExpContent] = useState([] as Exp[]);
 
@@ -38,7 +38,7 @@ const Profile = (Props: any) => {
                             'Cookie': `session_id=${session}`
                         }
                     }).then((response) => {
-                        setUser(response.data);
+                        setUser(response.data as User);
                     }).catch((error) => { console.log(error); });
                 }
             });
@@ -110,7 +110,6 @@ const Profile = (Props: any) => {
                         'Cookie': `session_id=${session_id}`
                     },
                 }).then((response) => {
-                    console.log(response.data);
                     setUser({ ...user, avatar: response.data.url });
                 }).catch((error) => {
                     console.log(error);
@@ -145,24 +144,24 @@ const Profile = (Props: any) => {
                                 <ThreeDotsIcon size={8} color={css.redesign.darker} />
                             </Pressable>
                         }}>
-                            <Menu.Item isDisabled>Sofia</Menu.Item>
+                            <Menu.Item isDisabled>درخواست هایلایت</Menu.Item>
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("EditProfile", { user: user });
-                            }}>Edit Profile</Menu.Item>
+                            }}>ویرایش روفایل</Menu.Item>
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("SkillsEdit", { user: user });
-                            }}>Edit Skills</Menu.Item>
+                            }}>ویرایش مهارت ها</Menu.Item>
                             <Menu.Item style={{ borderTopWidth: 1, borderTopColor: css.colors.fourth }} onPress={() => {
-                                Alert.alert("Log out", "Are you sure to log out?", [
+                                Alert.alert("خروج", "آیا مطمین هستید که میخواهید از حساب کاربری خود خارج شودید؟", [
                                     {
-                                        text: "Yes",
+                                        text: "بله",
                                         onPress: LogOut,
                                     },
                                     {
-                                        text: "No",
+                                        text: "حیر",
                                     }
                                 ]);
-                            }}>Log out</Menu.Item>
+                            }}>خروج</Menu.Item>
                         </Menu>
                     </Box>
                     <Text style={styles.topTitle}>{user.username}</Text>
@@ -183,9 +182,8 @@ const Profile = (Props: any) => {
                                 borderRadius: 16,
                                 justifyContent: "center",
                                 alignItems: "center",
-
                             }}>
-                                <Icon name="pen" size={16} color={css.colors.white} />
+                                <Icon name="pen" size={12} color={css.colors.white} />
                             </View>
                         </TouchableOpacity>
                         <View style={{
@@ -198,14 +196,14 @@ const Profile = (Props: any) => {
                             <View style={{
                                 alignItems: "center",
                             }}>
-                                <Text style={styles.btnText}>12</Text>
-                                <Text style={styles.btnText}>Exps</Text>
+                                <Text style={styles.btnText}>{user.expsCount}</Text>
+                                <Text style={styles.btnText}>مبحث ها</Text>
                             </View>
                             <View style={{
                                 alignItems: "center",
                             }}>
-                                <Text style={styles.btnText}>76</Text>
-                                <Text style={styles.btnText}>Answers</Text>
+                                <Text style={styles.btnText}>{user.answersCount}</Text>
+                                <Text style={styles.btnText}>پاسخ ها</Text>
                             </View>
                         </View>
                     </View>
@@ -233,7 +231,7 @@ const Profile = (Props: any) => {
                         }
                     </View>
                 </View>
-                <TabView items={[{ name: "Exps" }, { name: "Answers" }]} onChange={(tabName) => {
+                <TabView items={[{ name: "مبحث" }, { name: "پاسخ" }]} onChange={(tabName) => {
                     setAreaContent(tabName);
                 }}
                     Colors={{
@@ -255,7 +253,6 @@ const Profile = (Props: any) => {
                                             }} distance={10} >
                                                 <TouchableOpacity style={styles.expItem}
                                                     onPress={() => {
-                                                        console.log(item.image);
                                                         Props.navigation.navigate("PShowOneExp", { exp: item });
                                                     }}
                                                 >

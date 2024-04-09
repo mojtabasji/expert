@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { notifications } from '../../assets/data';
+import { notifications as Notifs } from '../../assets/data';
 import { Notification } from '../../constants/types';
 import css from '../../constants/css';
 import { ScrollView } from 'native-base';

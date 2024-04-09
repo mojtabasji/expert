@@ -15,14 +15,17 @@ export type User = {
     avatar: string,
     skills?: Skill[],
     phone: string,
-    bio: string | null
+    bio: string | null | undefined,
+    expsCount?: number,
+    answersCount?: number,
 }
 
 export type Response = {
+    id: number,
     user: User,
     content: string,
-    likes: number,
-    dislikes: number
+    likes: number[],
+    dislikes: number[]
 }
 
 export type Skill = {

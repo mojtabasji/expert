@@ -16,7 +16,7 @@ type TabViewProps = {
 
 const TabView = (Props: TabViewProps) => {
     const [tabs, setTabs] = useState(Props.items);
-    const [currentTab, setCurrentTab] = useState("Exps");
+    const [currentTab, setCurrentTab] = useState(Props.items[0].name );
 
     useEffect(() => {
         if (Props.onChange) {
@@ -39,7 +39,7 @@ const TabView = (Props: TabViewProps) => {
             borderRadius: 25,
         },
         item: {
-            width: 100,
+            width: 90,
             height: 50,
             justifyContent: "center",
             alignItems: "center",

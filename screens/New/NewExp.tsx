@@ -6,7 +6,7 @@ import axios from "axios";
 import { StorageHandler } from "../../constants/StorageHandler";
 import { Exp, User, Skill } from "../../constants/Types";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import Icon from "react-native-vector-icons/FontAwesome5";
+import Icon from "react-native-vector-icons/FontAwesome6";
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import LinearGradient from "react-native-linear-gradient";
 
@@ -22,7 +22,7 @@ const NewExp = (props: any) => {
     const [content, setContent] = useState("");
 
     const [newSkill, setNewSkill] = useState("" as string | undefined);
-
+    const [showDropDownList, setShowDropDownList] = useState(false);
 
     useEffect(() => {
         StorageHandler.retrieveData("session_id").then((data) => {
@@ -39,9 +39,9 @@ const NewExp = (props: any) => {
         });
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         setNewSkill("");
-    },[showPopup]);
+    }, [showPopup]);
 
     const chooseImage = () => {
         launchImageLibrary({ mediaType: "photo" }, (res) => {
@@ -70,12 +70,12 @@ const NewExp = (props: any) => {
             },
             withCredentials: true,
         }).then(res => {
-            if(res.data.result == "true"){
+            if (res.data.result == "true") {
                 setSkills([]);
                 setContent("");
                 selectedItems([]);
                 setTitle("");
-                setImage({uri:""});
+                setImage({ uri: "" });
                 props.navigation.navigate("HSHandler");
             }
         }).catch(err => {
@@ -84,12 +84,14 @@ const NewExp = (props: any) => {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={() => setShowPopup(false)}>
+        <TouchableWithoutFeedback onPress={() => { setShowPopup(false), setShowDropDownList(false); }}>
             <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
                 <ScrollView keyboardShouldPersistTaps="handled">
                     <View>
-                        <TouchableOpacity onPress={chooseImage}>
-                            <Text style={styles.textLink}>+ choose image</Text>
+                        <Text style={[css.titleText, { fontWeight: "bold", alignSelf: 'center', marginBottom: 20 }]}>مبحث جدید</Text>
+                        <TouchableOpacity onPress={chooseImage} style={{ flexDirection: "row-reverse", alignItems: "center" }} >
+                            <Icon name="square-plus" size={25} solid={true} color={css.redesign.darker} style={{}} />
+                            <Text style={[css.smallText, { color: css.redesign.darker, fontWeight: "bold", marginHorizontal: 10 }]}>افزودن تصویر</Text>
                         </TouchableOpacity>
                         {
                             image.uri.indexOf('file') !== -1 &&
@@ -118,102 +120,99 @@ const NewExp = (props: any) => {
                                 </TouchableOpacity>
                             </View>
                         }
-                        <Text>Title</Text>
-                        <TextInput style={[css.normalText, {
-                            width: '100%',
-                            borderBottomWidth: 1,
-                            borderColor: css.colors.secondary,
-                            borderRadius: 10,
-                            paddingHorizontal: 10,
-                            textAlign: 'justify',
-                        }]} multiline={true} onChangeText={(text) => setTitle(text)} ></TextInput>
-                        <Text style={{
-                            marginTop: 20,
-                        }}>Content</Text>
-                        <TextInput style={[css.normalText, {
-                            width: '100%',
-                            borderBottomWidth: 1,
-                            borderColor: css.colors.secondary,
-                            borderRadius: 10,
-                            paddingHorizontal: 10,
-                            textAlign: 'justify',
-                        }]} multiline={true} onChangeText={(text) => setContent(text)} ></TextInput>
                         <View style={{
-                            marginTop: 20,
-                            width: "100%",
-                        }}>
-                            <SearchableDropdown
-                                multi={true}
-                                selectedItems={selectedItems}
-                                onItemSelect={(item: any) => {
-                                    const items = selectedItems;
-                                    items.push(item)
-                                    setSelectedItems(items);
-                                }}
-                                containerStyle={{ padding: 5 }}
-                                onRemoveItem={(item: any, index: number) => {
-                                    const items = selectedItems.filter((sitem: any) => sitem.id !== item.id);
-                                    setSelectedItems(items);
-                                }}
-                                itemStyle={{
-                                    padding: 10,
-                                    marginTop: 2,
-                                    backgroundColor: '#ddd',
-                                    borderColor: '#bbb',
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                }}
-                                itemTextStyle={{ color: '#222' }}
-                                itemsContainerStyle={{ maxHeight: 140 }}
-                                items={skills.map(item => {
-                                    return {
-                                        id: item.id,
-                                        name: item.name
+                            marginVertical: 20,
+                        }} >
+                            <View style={styles.InputArea}>
+                                <Text style={[css.normalText, { marginBottom: 10 }]}>عنوان:</Text>
+                                <TextInput style={[css.smallText, styles.Input]} placeholder="عنوان" onChangeText={text => setTitle(text)} />
+                            </View>
+                            <View style={styles.InputArea}>
+                                <Text style={[css.normalText, { marginBottom: 10 }]}>متن بحث:</Text>
+                                <TextInput numberOfLines={5} multiline={true} style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="متن بحث" onChangeText={text => setContent(text)} />
+                            </View>
+                            <TouchableOpacity onPress={() => { setShowPopup(true); }}
+                                style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 10 }}>
+                                <Icon name="square-plus" size={18} color={css.redesign.darker} solid={true} />
+                                <Text style={[css.smallText, { textAlign: 'center', fontWeight: 'bold', marginHorizontal: 10, color: css.redesign.darker }]}>افزودن مهارت جدید به پایگاه داده</Text>
+                            </TouchableOpacity>
+                            <View>
+                                <SearchableDropdown
+                                    multi={true}
+                                    selectedItems={selectedItems}
+                                    onItemSelect={(item: any) => {
+                                        const items = selectedItems;
+                                        items.push(item)
+                                        setSelectedItems(items);
+                                    }}
+                                    containerStyle={{ padding: 20 }}
+                                    onTextChange={() => setShowDropDownList(true)}
+                                    onRemoveItem={(item: any, index: number) => {
+                                        const items = selectedItems.filter((sitem: any) => sitem.id !== item.id);
+                                        setSelectedItems(items);
+                                    }}
+                                    itemStyle={{
+                                        padding: 10,
+                                        marginTop: 5,
+                                        backgroundColor: css.redesign.secondary,
+                                        borderColor: css.redesign.darker,
+                                        borderWidth: 1,
+                                        borderRadius: 10,
+                                    }}
+                                    itemTextStyle={{ color: '#222' }}
+                                    itemsContainerStyle={
+                                        showDropDownList ? { maxHeight: 300 } : { display: "none" }
                                     }
-                                })}
-                                defaultIndex={2}
-                                chip={true}
-                                resetValue={false}
-                                textInputProps={
-                                    {
-                                        placeholder: "مهارت ها",
-                                        underlineColorAndroid: "transparent",
-                                        style: {
-                                            padding: 12,
-                                            borderWidth: 1,
-                                            borderColor: '#ccc',
-                                            borderRadius: 5,
-                                        },
+                                    items={skills.map(item => {
+                                        return {
+                                            id: item.id,
+                                            name: item.name
+                                        }
+                                    })}
+                                    defaultIndex={2}
+                                    chip={true}
+                                    resetValue={false}
+                                    textInputProps={
+                                        {
+                                            placeholder: "مهارت ها",
+                                            underlineColorAndroid: "transparent",
+                                            style: {
+                                                padding: 12,
+                                                borderWidth: 1,
+                                                borderColor: css.redesign.darker,
+                                                borderRadius: 15,
+                                                backgroundColor: css.redesign.lightest,
+                                            },
+                                        }
                                     }
-                                }
-                                listProps={
-                                    {
-                                        nestedScrollEnabled: true,
+                                    listProps={
+                                        {
+                                            nestedScrollEnabled: true,
+                                        }
                                     }
-                                }
-                            />
-                            <TouchableOpacity style={{ marginBottom: 20 }} onPress={()=>{setShowPopup(true);}}>
-                                <Text style={[css.smallText, {
-                                    color: css.colors.linkBlue,
-                                    alignSelf: 'flex-end',
-                                }]}>add new skill to list</Text>
+                                />
+                                {/* <Icon name="chevron-down" size={16} style={{ position: 'absolute', left: 25, top: 25 }} /> */}
+                            </View>
+                            <TouchableOpacity style={styles.btn}
+                                onPress={uploadNewExp}>
+                                <Text style={[css.normalText, { textAlign: 'center', color: css.redesign.lightest }]}>ارسال</Text>
                             </TouchableOpacity>
                         </View>
-                        <Button title="ایجاد" onPress={uploadNewExp} />
                     </View>
                 </ScrollView>
                 {
                     showPopup &&
                     <View style={styles.popup}>
-                        <Text>new Item add</Text>
-                        <TextInput placeholder="new skill" style={{
-                            borderBottomWidth: 1,
-                            borderColor: css.colors.gray,
+                        <Text style={[css.normalText, { fontWeight: "bold" }]}>افزودن مهارت جدید به لیست:</Text>
+                        <TextInput placeholder="مهارت جدید" style={{
+                            borderRadius: 20,
+                            backgroundColor: css.redesign.primary,
                             marginVertical: 10,
+                            paddingHorizontal: 20,
                         }} onChangeText={(text) => {
                             setNewSkill(text);
                         }} />
-                        <Button title="add" onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             console.log(newSkill);
                             if (newSkill === "")
                                 return;
@@ -232,7 +231,16 @@ const NewExp = (props: any) => {
                             }).catch(err => {
                                 console.log(err);
                             });
-                        }} />
+                        }} style={{
+                            marginHorizontal: 10,
+                            height: 40,
+                            backgroundColor: css.redesign.darker,
+                            borderRadius: 20,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                            <Text style={[css.smallText, { color: css.redesign.lightest }]}>افزودن</Text>
+                        </TouchableOpacity>
                     </View>
                 }
             </LinearGradient>
@@ -263,6 +271,21 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: css.colors.black,
 
+    },
+    InputArea: {
+        margin: 10,
+        padding: 10,
+    },
+    Input: {
+        backgroundColor: css.redesign.lightest,
+        borderRadius: 10,
+        padding: 10,
+    },
+    btn: {
+        padding: 10,
+        backgroundColor: css.redesign.darker,
+        borderRadius: 10,
+        marginVertical: 10,
     },
 });
 
