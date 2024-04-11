@@ -62,7 +62,8 @@ const Profile = (Props: any) => {
                     Cookie: `session_id=${session_id};`
                 }
             }).then((response) => {
-                setExpContent(response.data);
+                let data = response.data as Exp[];
+                setExpContent(data.reverse());
             }).catch((error) => { console.log(error); }).finally(() => { setExpsFetch(false); });
         } else {
             axios.get(api.my_responses + `?user_id=${user.id}`, {
@@ -71,8 +72,8 @@ const Profile = (Props: any) => {
                     'Cookie': `session_id=${session_id}`
                 }
             }).then((response) => {
-                console.log("responses: ", response.data);
-                setExpContent(response.data);
+                let data = response.data as Exp[];
+                setExpContent(data.reverse());
             }).catch((error) => { console.log(error); }).finally(() => { setExpsFetch(false); });
         }
     }, [areaContent, session_id]);

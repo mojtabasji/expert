@@ -73,10 +73,10 @@ const NewExp = (props: any) => {
             if (res.data.result == "true") {
                 setSkills([]);
                 setContent("");
-                selectedItems([]);
+                setSelectedItems([]);
                 setTitle("");
                 setImage({ uri: "" });
-                props.navigation.navigate("HSHandler");
+                props.navigation.navigate("Profile");
             }
         }).catch(err => {
             console.log(err);
@@ -125,11 +125,11 @@ const NewExp = (props: any) => {
                         }} >
                             <View style={styles.InputArea}>
                                 <Text style={[css.normalText, { marginBottom: 10 }]}>عنوان:</Text>
-                                <TextInput style={[css.smallText, styles.Input]} placeholder="عنوان" onChangeText={text => setTitle(text)} />
+                                <TextInput style={[css.smallText, styles.Input]} placeholder="عنوان" onChangeText={text => setTitle(text)} value={title} />
                             </View>
                             <View style={styles.InputArea}>
                                 <Text style={[css.normalText, { marginBottom: 10 }]}>متن بحث:</Text>
-                                <TextInput numberOfLines={5} multiline={true} style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="متن بحث" onChangeText={text => setContent(text)} />
+                                <TextInput numberOfLines={5} multiline={true} style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="متن بحث" onChangeText={text => setContent(text)} value={content} />
                             </View>
                             <TouchableOpacity onPress={() => { setShowPopup(true); }}
                                 style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 10 }}>
@@ -213,7 +213,6 @@ const NewExp = (props: any) => {
                             setNewSkill(text);
                         }} />
                         <TouchableOpacity onPress={() => {
-                            console.log(newSkill);
                             if (newSkill === "")
                                 return;
                             let form = new FormData();
@@ -227,7 +226,6 @@ const NewExp = (props: any) => {
                             }).then(res => {
                                 setSkills(res.data);
                                 setShowPopup(false);
-                                console.log(res.data);
                             }).catch(err => {
                                 console.log(err);
                             });
