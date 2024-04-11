@@ -53,6 +53,7 @@ const Profile = (Props: any) => {
 
     useEffect(() => {
         if (session_id == "") return;
+        if (refreshing) return;
         setExpsFetch(true);
         setExpContent([]);
         if (areaContent == tabs[0].name) {
@@ -76,7 +77,7 @@ const Profile = (Props: any) => {
                 setExpContent(data.reverse());
             }).catch((error) => { console.log(error); }).finally(() => { setExpsFetch(false); });
         }
-    }, [areaContent, session_id]);
+    }, [areaContent, session_id, refreshing]);
 
     const onRefresh = () => {
         setRefreshing(true);

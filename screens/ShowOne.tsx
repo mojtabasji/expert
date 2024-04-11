@@ -45,6 +45,7 @@ const ShowOne = (props: any) => {
     }, [exp]);
 
     const letsRefresh = () => {
+        if (exp.id === undefined) return;
         StorageHandler.retrieveData("session_id").then((session) => {
             axios.get(api.show_exp + `/${exp.id}/${exp.title}`, {
                 headers: {
@@ -146,7 +147,7 @@ const ShowOne = (props: any) => {
                     exp_id: exp.id
                 }
             }).then(res => {
-                if (res.data == "true") props.navigation.goBack();
+                if (res.data.result == "true") props.navigation.goBack();
             })
         });
     }
@@ -216,7 +217,6 @@ const ShowOne = (props: any) => {
                         <Text style={[css.normalText, { marginVertical: 20 }]}>{exp.content}</Text>
                         {
                             response.map((item, index) => {
-                                console.log("resp: ", item.likes, item.dislikes);
                                 return (
                                     <View key={index} style={{
                                         paddingVertical: 10,

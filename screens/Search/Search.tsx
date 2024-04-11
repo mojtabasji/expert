@@ -42,7 +42,7 @@ const Search = (props: any) => {
                 <TextInput style={{
                     width: "85%",
                     paddingHorizontal: 20,
-                }} placeholder="Search" onChangeText={(text) => search(text)}>
+                }} placeholder="Search" onChangeText={(text) => { if (text.length > 2) search(text); else setSearchResult([]); }}>
                 </TextInput>
                 <Icon name="search" size={22} style={{
                     width: "15%",
@@ -56,35 +56,35 @@ const Search = (props: any) => {
                 paddingTop: 15
             }}>
                 {
-                    loading ? 
-                    <ActivityIndicator size="large" color={css.colors.dark} style={{
-                        marginTop: 80,
-                        alignSelf: 'center',
-                    }} /> :
-                    searchResult.map((item, index) => {
-                        return (
-                            <TouchableOpacity key={index} style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                width: Dimensions.get('window').width * 0.9,
-                                paddingVertical: 12,
-                                borderBottomWidth: 1,
-                                borderBottomColor: css.redesign.primary,
-                            }}
-                                onPress={() => {
-                                    props.navigation.navigate("SShowOneExp", { exp: item });
+                    loading ?
+                        <ActivityIndicator size="large" color={css.colors.dark} style={{
+                            marginTop: 80,
+                            alignSelf: 'center',
+                        }} /> :
+                        searchResult.map((item, index) => {
+                            return (
+                                <TouchableOpacity key={index} style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: Dimensions.get('window').width * 0.9,
+                                    paddingVertical: 12,
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: css.redesign.primary,
                                 }}
-                            >
-                                {
-                                    item.user.avatar ?
-                                        <Image style={styles.avatar} source={{ uri: item.user.avatar }} />
-                                        :
-                                        <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
-                                }
-                                <Text style={[css.smallText, { textAlign: "justify" }]}>{item.title}</Text>
-                            </TouchableOpacity>
-                        );
-                    })
+                                    onPress={() => {
+                                        props.navigation.navigate("SShowOneExp", { exp: item });
+                                    }}
+                                >
+                                    {
+                                        item.user.avatar ?
+                                            <Image style={styles.avatar} source={{ uri: item.user.avatar }} />
+                                            :
+                                            <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
+                                    }
+                                    <Text style={[css.smallText, { textAlign: "justify" }]}>{item.title}</Text>
+                                </TouchableOpacity>
+                            );
+                        })
                 }
             </ScrollView>
         </LinearGradient>
