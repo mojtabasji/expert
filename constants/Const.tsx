@@ -9,22 +9,35 @@ export const api = {
     is_username_valid: serverAddress + 'users/usernamecheck?',
     logout: serverAddress + 'users/logout',
     register: serverAddress + 'users/create',
+
     new_exp: serverAddress + 'exps/create',
+    my_exps: serverAddress + 'exps/myexps',
+    show_exp: serverAddress + 'exps/show',  // GET PathValues: /exp_id/title
+    get_user_related_exps: serverAddress + 'exps/showuserrelated',
+    delete_exp: serverAddress + "exps/delete",      // DELETE Values: exp_id
+
     get_skills: serverAddress + 'skills',
     skills_add: serverAddress + 'skills/add', // add new skill to skills table
     get_user_skills: serverAddress + 'users/skills',    // GET
     add_skill_to_user: serverAddress + 'users/skills/add', // POST
     remove_skill_from_user: serverAddress + 'users/skills/remove', // POST
-    my_exps: serverAddress + 'exps/myexps',
-    show_exp: serverAddress + 'exps/show',
+
+    my_responses: serverAddress + 'users/responses',    // GET Values: user_id
+    add_exp_comment: serverAddress + 'exps/responses/add',  // POST Values: exp_id, content
+    changeLikeState: serverAddress + 'responses/like', // POST
+    
     get_user_info: serverAddress + 'users/show/',
-    update_user_info: serverAddress + 'users/update',
-    get_user_related_exps: serverAddress + 'exps/showuserrelated',
-    add_exp_comment: serverAddress + 'exps/responses/add',
+    update_user_info: serverAddress + 'users/update',   // POST Values: fullname, bio, password?, phone, 
     uploadProfileImage: serverAddress + 'users/profileupload', // POST
+    get_top_users: serverAddress + 'gettopusers',  // GET
+    get_top_users_detail: serverAddress + 'gettopuserdetail',  // GET
+    add_me2tops: serverAddress + 'users/top/add',
+    
     get_notifications: serverAddress + 'notifications', // GET
     set_notification_read: serverAddress + 'notifications/read', // GET
-    changeLikeState: serverAddress + 'exps/responses/like', // POST
+
+    search: serverAddress + 'exps/search', // GET Values: query
+    
 }
 
 

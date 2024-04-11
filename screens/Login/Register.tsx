@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import LinearGradient from 'react-native-linear-gradient';
 
 import LoginHandler from '../../constants/LoginHandler';
 import { StorageHandler } from '../../constants/StorageHandler';
@@ -65,66 +66,51 @@ const Register = (props: any) => {
     }
 
     return (
-        <View style={styles.container}>
+        <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
             <ScrollView>
                 <View style={{
-                    width: Dimensions.get("window").width * .9,
-                    height: Dimensions.get("window").height,
+                    width: Dimensions.get("window").width,
+                    height: Dimensions.get("window").height * .9,
                     justifyContent: 'space-around',
                     alignItems: 'center',
                 }}>
-                    <View style={{
-                        width: '100%',
-                        paddingHorizontal: 20,
-                    }}>
-                        <Text>نام کاربری</Text>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                        }}>
-                            <TextInput
-                                style={[styles.form_input, {
-                                    borderBottomColor: is_username_valid ? 'gray' : 'red',
-                                    color: is_username_valid ? 'black' : 'red',
-                                }]}
-                                onChangeText={text => setUsername(text)}
-                                value={username}
-                                onBlur={checkUsernameValidity}
-                            />
-                            {
-                                is_username_valid ?
-                                    <Icon name="check" size={20} color="green" />
-                                    :
-                                    <Icon name="times" size={20} color="red" />
-                            }
-                        </View>
-                        <Text>نام و نام خانوادگی</Text>
-                        <TextInput
-                            style={styles.form_input}
+                    <View style={styles.InputArea}>
+                        <Text style={[css.normalText, { marginBottom: 10 }]}>نام کاربری:</Text>
+                        <TextInput style={[css.smallText, styles.Input]} placeholder="نام کاربری"
+                            onChangeText={text => setUsername(text)}
+                            value={username}
+                            onBlur={checkUsernameValidity} />
+                        {
+                            is_username_valid ?
+                                <Icon name="check" size={20} color="green" />
+                                :
+                                <Icon name="times" size={20} color="red" />
+                        }
+                    </View>
+                    <View style={styles.InputArea}>
+                        <Text style={[css.normalText, { marginBottom: 10 }]}> نام و نام خانوادگی:</Text>
+                        <TextInput style={[css.smallText, styles.Input]} placeholder="نام و نام خانوادگی"
                             onChangeText={text => setFullname(text)}
-                            value={fullname}
-                        />
-                        <Text>شماره تلفن</Text>
-                        <TextInput
-                            style={styles.form_input}
+                            value={fullname} />
+                    </View>
+                    <View style={styles.InputArea}>
+                        <Text style={[css.normalText, { marginBottom: 10 }]}>شماره تلفن:</Text>
+                        <TextInput style={[css.smallText, styles.Input]} placeholder="شماره تلفن"
                             onChangeText={text => setPhone(text)}
-                            value={phone}
-                        />
-                        <Text>رمز عبور</Text>
-                        <TextInput
-                            style={styles.form_input}
+                            value={phone} />
+                    </View>
+                    <View style={styles.InputArea}>
+                        <Text style={[css.normalText, { marginBottom: 10 }]}>رمز عبور:</Text>
+                        <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="رمز عبور"
                             onChangeText={text => setPassword(text)}
                             value={password}
-                            secureTextEntry={true}
-                        />
-                        <Text>تکرار رمز عبور</Text>
-                        <TextInput
-                            style={styles.form_input}
-                            onChangeText={text => setPasswordConfirm(text)}
+                            secureTextEntry={true} />
+                    </View>
+                    <View style={styles.InputArea}>
+                        <Text style={[css.normalText, { marginBottom: 10 }]}>تکرار رمز عبور:</Text>
+                        <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="تکرار رمز عبور" onChangeText={text => setPasswordConfirm(text)}
                             value={password_confirm}
-                            secureTextEntry={true}
-                        />
+                            secureTextEntry={true} />
                     </View>
                     <View style={{
                         width: '100%',
@@ -132,23 +118,23 @@ const Register = (props: any) => {
                     }} >
                         <TouchableOpacity style={{
                             width: '75%', height: 40, borderRadius: 20,
-                            justifyContent: 'center', alignItems: 'center', marginBottom: 10 ,
-                            backgroundColor: css.colors.primary,
-                            }} 
+                            justifyContent: 'center', alignItems: 'center', marginBottom: 10,
+                            backgroundColor: css.redesign.darker,
+                        }}
                             onPress={register} >
-                            <Text>ثبت نام</Text>
+                            <Text style={{ color: css.redesign.lightest }}>ثبت نام</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => {
                                 props.change_screen("Login");
                             }}>
-                            <Text>Login</Text>
+                            <Text style={[css.normalText, { color: css.redesign.darker }]}>ورود</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
-        </View>
+        </LinearGradient>
     );
 }
 
@@ -157,6 +143,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
+        paddingTop: 20
     },
     form_input: {
         width: '75%',
@@ -164,6 +151,14 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderBottomWidth: 1,
         marginBottom: 10,
+    },
+    InputArea: {
+        width: '80%',
+    },
+    Input: {
+        backgroundColor: css.redesign.lightest,
+        borderRadius: 10,
+        paddingHorizontal: 10,
     },
 });
 

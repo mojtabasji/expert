@@ -20,14 +20,17 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     StorageHandler.retrieveData("session_id").then(data => {
+      if (data == undefined) setLoggedIn(false);
+      StorageHandler.retrieveData("user_id").then(id => {
+        if (id == undefined) setLoggedIn(false);
+      });
       let session;
-      session = data;
+      session = `session_id=${data};`
       axios.get(api.is_auth_valid, {
         headers: {
-          Cookie: `session_id=${session};`
+          Cookie: session
         }
       }).then(res => {
-        console.log("is_auth_valid", res.data.result);
         if (res.data.result == "true") {
           setLoggedIn(true);
         }

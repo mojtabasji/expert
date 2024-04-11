@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl, ActivityIndicator } from 'react-native';
 import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
@@ -18,13 +18,19 @@ import { Exp, Skill, User } from '../../constants/Types';
 
 
 const Profile = (Props: any) => {
-    const [user, setUser] = useState(top_users[0] as User);
-    const [areaContent, setAreaContent] = useState("Exps");
+    const tabs = [{ name: "مبحث" }, { name: "پاسخ" }];
+
+    const [user, setUser] = useState({
+        avatar: null,
+    } as User);
+    const [areaContent, setAreaContent] = useState(tabs[0].name);
     const [expContent, setExpContent] = useState([] as Exp[]);
 
     const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
     const [session_id, setSession_id] = useState("");
     const [refreshing, setRefreshing] = useState(false);
+    const [expsFetch, setExpsFetch] = useState(false);
+
 
     useEffect(() => {
         setRefreshing(false);
@@ -47,7 +53,9 @@ const Profile = (Props: any) => {
 
     useEffect(() => {
         if (session_id == "") return;
-        if (areaContent == "Exps") {
+        setExpsFetch(true);
+        setExpContent([]);
+        if (areaContent == tabs[0].name) {
             axios.get(api.my_exps, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,16 +63,17 @@ const Profile = (Props: any) => {
                 }
             }).then((response) => {
                 setExpContent(response.data);
-            }).catch((error) => { console.log(error); });
+            }).catch((error) => { console.log(error); }).finally(() => { setExpsFetch(false); });
         } else {
-            axios.get(api.my_exps, {
+            axios.get(api.my_responses + `?user_id=${user.id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Cookie': `session_id=${session_id}`
                 }
             }).then((response) => {
+                console.log("responses: ", response.data);
                 setExpContent(response.data);
-            }).catch((error) => { console.log(error); });
+            }).catch((error) => { console.log(error); }).finally(() => { setExpsFetch(false); });
         }
     }, [areaContent, session_id]);
 
@@ -80,8 +89,12 @@ const Profile = (Props: any) => {
                             'Cookie': `session_id=${session}`
                         }
                     }).then((response) => {
+
                         setUser(response.data);
                     }).catch((error) => { console.log(error); });
+                }
+                if (uid == null) {
+                    updateLoggedIn(false);
                 }
             });
         }).then(() => { setRefreshing(false); });
@@ -147,7 +160,7 @@ const Profile = (Props: any) => {
                             <Menu.Item isDisabled>درخواست هایلایت</Menu.Item>
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("EditProfile", { user: user });
-                            }}>ویرایش روفایل</Menu.Item>
+                            }}>ویرایش پروفایل</Menu.Item>
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("SkillsEdit", { user: user });
                             }}>ویرایش مهارت ها</Menu.Item>
@@ -196,13 +209,13 @@ const Profile = (Props: any) => {
                             <View style={{
                                 alignItems: "center",
                             }}>
-                                <Text style={styles.btnText}>{user.expsCount}</Text>
+                                <Text style={styles.btnText}>{user.exps_count}</Text>
                                 <Text style={styles.btnText}>مبحث ها</Text>
                             </View>
                             <View style={{
                                 alignItems: "center",
                             }}>
-                                <Text style={styles.btnText}>{user.answersCount}</Text>
+                                <Text style={styles.btnText}>{user.answers_count}</Text>
                                 <Text style={styles.btnText}>پاسخ ها</Text>
                             </View>
                         </View>
@@ -231,7 +244,7 @@ const Profile = (Props: any) => {
                         }
                     </View>
                 </View>
-                <TabView items={[{ name: "مبحث" }, { name: "پاسخ" }]} onChange={(tabName) => {
+                <TabView items={tabs} onChange={(tabName) => {
                     setAreaContent(tabName);
                 }}
                     Colors={{
@@ -243,6 +256,9 @@ const Profile = (Props: any) => {
                 />
                 <View style={styles.bottomArea}>
                     <View style={styles.expArea}>
+                        <ActivityIndicator size="large" color={css.redesign.darker} animating={expsFetch} style={{
+                            position: "absolute", alignSelf: "center", top: 100, zIndex: 1,
+                        }} />
                         {
                             expContent.length === 0 ? <Text style={{ alignSelf: "center", }}>No exp</Text> :
                                 expContent.map((item, index) => {

@@ -14,6 +14,7 @@ export const StorageHandler = {
             if (value !== null) {
                 return value;
             }
+            return undefined;
         } catch (error) {
             console.log("error in retrieving data");
         }

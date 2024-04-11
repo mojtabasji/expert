@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from "react-native";
 import { Box, HamburgerIcon, Pressable, Menu, Input } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import axios from "axios";
@@ -34,20 +34,48 @@ const EditProfile = (props: any) => {
         });
     }, []);
 
+    const updateUserInfo = () => {
+        let form = new FormData();
+        form.append("fullname", fullname);
+        form.append("bio", bio);
+        form.append("phone", phone);
+        if (password !== "") {
+            if (password === passwordConfirm) {
+                form.append("password", password);
+            }
+            else {
+                Alert.alert("Password Error", "Password and Confirm Password must be the same");
+                return;
+            }
+        }
+        console.log(form);
+        axios.post(api.update_user_info, form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Cookie': `session_id=${session_id}`
+            }
+        }).then((response) => {
+            console.log("resp: ", response.data);
+            props.navigation.goBack();
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     return (
         <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
             <ScrollView>
                 <View style={{ justifyContent: "center", paddingVertical: 10, paddingHorizontal: 10, }}>
                     <TouchableOpacity onPress={() => props.navigation.goBack()}
-                    style={{
-                        width: 40,
-                        height: 40,
-                        borderWidth: 1,
-                        borderRadius: 10,
-                        borderColor: css.redesign.darker,
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}>
+                        style={{
+                            width: 40,
+                            height: 40,
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: css.redesign.darker,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
                         <Icon name="chevron-left" size={20} onPress={() => props.navigation.goBack()} color={css.redesign.darker} />
                     </TouchableOpacity>
                     <Text style={[css.titleText, {
@@ -76,21 +104,7 @@ const EditProfile = (props: any) => {
                     <Text style={[css.normalText, { marginBottom: 10 }]}>Password Confirm:</Text>
                     <TextInput style={[css.smallText, styles.Input]} placeholder="Password Confirm" textContentType="password" onChangeText={text => setPasswordConfirm(text)} />
                 </View>
-                <TouchableOpacity style={styles.btn} onPress={() => {
-                    axios.post(api.update_user_info, {
-                        fullname: user.fullname,
-                        bio: user.bio
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Cookie': `session_id=${session_id}`
-                        }
-                    }).then((response) => {
-                        console.log(response.data);
-                    }).catch((error) => {
-                        console.log(error);
-                    });
-                }}>
+                <TouchableOpacity style={styles.btn} onPress={updateUserInfo}>
                     <Text style={{
                         color: "white",
                     }}>Save</Text>

@@ -1,13 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, ScrollView, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TextInput, ScrollView, Dimensions, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import css from '../../constants/css';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
 
+import { StorageHandler } from '../../constants/StorageHandler';
 import data from '../../assets/data';
+import { Exp } from '../../constants/Types';
+import { api } from '../../constants/Const';
 
 const Search = (props: any) => {
+    const [searchResult, setSearchResult] = useState([] as Exp[]);
+    const [loading, setLoading] = useState(false);
 
+    const search = (searchText: string) => {
+        setLoading(true);
+        StorageHandler.retrieveData('session').then(session => {
+            axios.get(api.search, {
+                headers: {
+                    Cookie: `session_id=${session};`
+                },
+                params: {
+                    query: searchText
+                }
+            })
+                .then(res => {
+                    setSearchResult(res.data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setLoading(false);
+                });
+        });
+    }
 
     return (
         <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
@@ -15,9 +42,9 @@ const Search = (props: any) => {
                 <TextInput style={{
                     width: "85%",
                     paddingHorizontal: 20,
-                }}>
+                }} placeholder="Search" onChangeText={(text) => search(text)}>
                 </TextInput>
-                <Icon name="search" size={27} style={{
+                <Icon name="search" size={22} style={{
                     width: "15%",
                     aspectRatio: 1,
                     alignSelf: 'center',
@@ -29,7 +56,12 @@ const Search = (props: any) => {
                 paddingTop: 15
             }}>
                 {
-                    data.map((item, index) => {
+                    loading ? 
+                    <ActivityIndicator size="large" color={css.colors.dark} style={{
+                        marginTop: 80,
+                        alignSelf: 'center',
+                    }} /> :
+                    searchResult.map((item, index) => {
                         return (
                             <TouchableOpacity key={index} style={{
                                 flexDirection: 'row',

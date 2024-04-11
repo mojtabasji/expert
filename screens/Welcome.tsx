@@ -20,45 +20,9 @@ const Welcome = (props: any) => {
         <>
             {
                 showWelcome ?
-                    <View style={styles.container}>
+                    <LinearGradient colors={[css.redesign.secondary, css.redesign.primary]} style={styles.container}>
                         <View style={{ flex: 1, overflow: 'hidden' }}>
-                            <Image source={require('../assets/images/startup1.png')} style={styles.welcome_image} />
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <View style={{ flex: 1, }} >
-                                    <LinearGradient
-                                        colors={['rgba(255,255,255,0.9)', 'transparent', 'transparent']}
-                                        style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: "100%" }}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 1, y: 1 }}
-                                    />
-                                </View>
-                                <View style={{ flex: 1, }} >
-                                    <LinearGradient
-                                        colors={['rgba(255,255,255,0.9)', 'transparent', 'transparent']}
-                                        style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: "100%" }}
-                                        start={{ x: 1, y: 0 }}
-                                        end={{ x: 0, y: 1 }}
-                                    />
-                                </View>
-                            </View>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <View style={{ flex: 1, }} >
-                                    <LinearGradient
-                                        colors={['rgba(255,255,255,0.9)', 'transparent', 'transparent']}
-                                        style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: "100%" }}
-                                        start={{ x: 0, y: 1 }}
-                                        end={{ x: 1, y: 0 }}
-                                    />
-                                </View>
-                                <View style={{ flex: 1, }} >
-                                    <LinearGradient
-                                        colors={['rgba(255,255,255,0.9)', 'transparent', 'transparent']}
-                                        style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: "100%" }}
-                                        start={{ x: 1, y: 1 }}
-                                        end={{ x: 0, y: 0 }}
-                                    />
-                                </View>
-                            </View>
+                            <Image source={require('../assets/images/LOGO.png')} style={styles.welcome_image} />
                         </View>
                         <View style={styles.optionsArea}>
                             <Text style={css.largeText}>به اکسپرت خوش آمدید</Text>
@@ -77,12 +41,12 @@ const Welcome = (props: any) => {
                                         }
                                     })
                                 }}>
-                                    <Text style={css.btn_text}>برای شروع وارد شوید</Text>
+                                    <Text style={[css.btn_text, { color: css.redesign.lightest }]}>برای شروع وارد شوید</Text>
                                 </TouchableOpacity>
                             </View>
 
                         </View>
-                    </View>
+                    </LinearGradient>
                     :
                     <LHandler />
             }
@@ -93,7 +57,6 @@ const Welcome = (props: any) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
     },
     welcome_image: {
         width: width,
@@ -107,7 +70,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     btn: {
-        backgroundColor: '#45cafc',
+        backgroundColor: css.redesign.darker,
         borderRadius: 20,
         paddingVertical: 10,
         paddingHorizontal: 30,

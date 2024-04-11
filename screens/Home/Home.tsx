@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
-import css from '../../constants/css';
-import { api } from '../../constants/Const';
-import axios from 'axios';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView, RefreshControl, Alert, ActivityIndicator } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Shadow } from 'react-native-shadow-2';
+import Icon from 'react-native-vector-icons/FontAwesome6'
+import axios from 'axios';
 
 import { StorageHandler } from '../../constants/StorageHandler';
 import { Exp, User } from '../../constants/Types';
+import LoginHandler from '../../constants/LoginHandler';
+import css from '../../constants/css';
+import { api } from '../../constants/Const';
 
-
-import data, { top_users } from '../../assets/data';
 
 const Home = (props: any) => {
-    const [exps, setExps] = useState(data);
+    const [exps, setExps] = useState([] as Exp[]);
+    const [top_users, setTopUsers] = useState([] as User[]);
+    const [currentUser, setCurrentUSer] = useState({} as User);
+    const [sessionValue, setSessionValue] = useState(undefined as string | undefined);
 
     const [refreshing, setRefreshing] = useState(false);
+    const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -31,13 +35,37 @@ const Home = (props: any) => {
             }).catch(err => { console.log(err); }).finally(() => {
                 setRefreshing(false);
             });
+            axios.get(api.get_top_users, {
+                headers: {
+                    Cookie: `session_id=${session};`
+                }
+            }).then(res => {
+                setTopUsers(res.data as User[]);
+            }).catch(err => { console.log(err); });
         });
     };
 
     useEffect(() => {
         StorageHandler.retrieveData("session_id").then(data => {
-            let session;
+            if (data == undefined) updateLoggedIn(false);
+            let session: string | undefined;
             session = data;
+            setSessionValue(session);
+            // Get current user info
+            StorageHandler.retrieveData("user_id").then(id => {
+                if (id != undefined) {
+                    axios.get(api.get_user_info + id, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Cookie': `session_id=${session};`
+                        }
+                    }).then((response) => {
+                        setCurrentUSer(response.data as User);
+                    }).catch((error) => { console.log(error); });
+                }
+            });
+
+            // Get user related exps
             axios.get(api.get_user_related_exps, {
                 headers: {
                     Cookie: `session_id=${session};`
@@ -45,12 +73,31 @@ const Home = (props: any) => {
             }).then(res => {
                 setExps(res.data as Exp[]);
             }).catch(err => { console.log(err); });
+            axios.get(api.get_top_users, {
+                headers: {
+                    Cookie: `session_id=${session};`
+                }
+            }).then(res => {
+                setTopUsers(res.data as User[]);
+            }).catch(err => { console.log(err); });
         });
     }, [])
 
     const change_screen = (screen_name: string, values: object = {}) => {
         props.navigation.navigate(screen_name, values);
     };
+
+    const topUserRequest = () => {
+        axios.get(api.add_me2tops, {
+            headers: {
+                'Cookies': `session_id=${sessionValue};`
+            }
+        }).then(res => {
+            if (res.data == "treu") {
+                Alert.alert("درخواست شما ثبت شد. پس از تایید مدیر اضافه خواهید شد.");
+            }
+        }).catch(err => console.log(err));
+    }
 
     const render_items = (item: Exp, index: number) => {
         let image_uri = item.image == null ? null : item.image;
@@ -85,7 +132,7 @@ const Home = (props: any) => {
                                     :
                                     <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
                             }
-                            <Text style={css.minimalText}>{item.user?.username}</Text>
+                            <Text style={[css.minimalText,{color: css.redesign.lightest}]}>{item.user?.username}</Text>
                         </View>
                         <View style={{ marginBottom: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
                             <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold" }}>{item.title}</Text>
@@ -122,40 +169,101 @@ const Home = (props: any) => {
                         borderBottomWidth: 2,
                     }} >
                         <ScrollView horizontal={true} >
-                            {
-                                top_users.map((item, index) => {
-                                    return (
-                                        <TouchableOpacity key={index} style={{
+                            <TouchableOpacity onPress={() => {
+                                Alert.alert("هایلایت", "آیا میخواهید به هایلایت ها اضافه شوید؟؟", [
+                                    {
+                                        text: "بله",
+                                        onPress: topUserRequest
+                                    },
+                                    {
+                                        text: "خیر"
+                                    }
+                                ])
+                            }} style={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 40,
+                                margin: 10,
+                                backgroundColor: css.redesign.lightest
+                            }}>
+                                {
+                                    currentUser.avatar ?
+                                        <Image style={{
                                             width: 80,
                                             height: 80,
                                             borderRadius: 40,
-                                            margin: 10,
-                                            backgroundColor: css.colors.primary,
-                                        }}
-                                            onPress={() => {
-                                                change_screen("ShowOneUser", { user: item });
-                                            }}
-                                        >
-                                            <Image source={{ uri: item.avatar }} style={{
+                                            borderWidth: 1,
+                                            borderColor: css.redesign.darker,
+                                        }} source={{ uri: currentUser.avatar }} alt='' />
+                                        :
+                                        <Image style={{
+                                            width: 80,
+                                            height: 80,
+                                            borderRadius: 40,
+                                            borderWidth: 1,
+                                            borderColor: css.colors.fourth,
+                                        }} alt='' source={require('../../assets/images/user_avatar.png')} />
+                                }
+                                <View style={{
+                                    position: "absolute", bottom: 10, right: 0,
+                                    backgroundColor: css.redesign.darker,
+                                    padding: 8,
+                                    borderRadius: 16,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}>
+                                    <Icon name="plus" size={12} color={css.colors.white} />
+                                </View>
+                            </TouchableOpacity>
+                            {
+                                top_users.map((item, index) => {
+                                    if (item.id != currentUser.id)
+                                        return (
+                                            <TouchableOpacity key={index} style={{
                                                 width: 80,
                                                 height: 80,
                                                 borderRadius: 40,
-                                                borderWidth: 1,
-                                                borderColor: css.colors.fourth,
-                                            }} />
-                                        </TouchableOpacity>
-                                    );
+                                                margin: 10,
+                                                backgroundColor: css.colors.primary,
+                                            }}
+                                                onPress={() => {
+                                                    change_screen("TopUserDetail", { topUserId: item.id });
+                                                }}
+                                            >
+                                                {
+                                                    item.avatar != null ?
+                                                        <Image source={{ uri: item.avatar }} style={{
+                                                            width: 80,
+                                                            height: 80,
+                                                            borderRadius: 40,
+                                                            borderWidth: 1,
+                                                            borderColor: css.colors.fourth,
+                                                        }} /> :
+                                                        <Image style={{
+                                                            width: 80,
+                                                            height: 80,
+                                                            borderRadius: 40,
+                                                            borderWidth: 1,
+                                                            borderColor: css.colors.fourth,
+                                                        }} alt='' source={require('../../assets/images/user_avatar.png')} />
+                                                }
+                                            </TouchableOpacity>
+                                        );
                                 })
                             }
                         </ScrollView>
                     </View>
                     <View style={{
-                        flex:1,
+                        flex: 1,
                         marginTop: 15,
                     }}>
-                    {
-                        exps.map((item, index) => render_items(item, index))
-                    }
+                        {
+                            exps.length > 0 ?
+                                exps.map((item, index) => render_items(item, index))
+                                :
+                                // <ActivityIndicator size={'large'} color={css.redesign.darker} />
+                                <Text style={[css.normalText,{color:css.redesign.darker, marginHorizontal:20, marginTop:100, textAlign:"justify"}]}>چیزی برای نمایش وجود ندارد. مهارت های خود را ویرایش کنید.</Text>
+                        }
                     </View>
                 </View>
             </ScrollView>
@@ -171,7 +279,7 @@ const styles = StyleSheet.create({
     itemArea: {
         backgroundColor: css.redesign.lightest,
         borderRadius: 15,
-        width: Dimensions.get('window').width -20,
+        width: Dimensions.get('window').width - 20,
     },
     avatar: {
         width: 40,

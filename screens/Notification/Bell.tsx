@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,6 +8,7 @@ import { Notification } from '../../constants/types';
 import css from '../../constants/css';
 import { ScrollView } from 'native-base';
 import { api } from '../../constants/Const';
+import { StorageHandler } from '../../constants/StorageHandler';
 
 
 const Bell = (Props: any) => {
@@ -15,17 +16,30 @@ const Bell = (Props: any) => {
 
     useEffect(() => {
         axios.get(api.get_notifications).then(res => {
-            setNotifications(res.data);
+            let notifs: Notification[] = res.data;
+            setNotifications(notifs.reverse());
         }).catch(err => {
             console.log(err);
         });
     }, []);
 
     const setRead = (notification: Notification) => {
-        axios.get(api.set_notification_read + `?id=${notification.id}`).then(res => {
-            console.log(res.data);
-        }).catch(err => {
-            console.log(err);
+        StorageHandler.retrieveData("session_id").then((session) => {
+            axios.get(api.set_notification_read + `?id=${notification.id}`, {
+                headers: {
+                    'Cookie': `session_id=${session}`
+                }
+            }).then(res => {
+                if (res.data.result == "true") {
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            let newNotifications = notifications.map((notif, index) => {
+                if (notif.id == notification.id) notif.is_read = true;
+                return notif;
+            });
+            setNotifications(newNotifications);
         });
     }
 
@@ -35,34 +49,38 @@ const Bell = (Props: any) => {
                 <View style={{ width: '100%', alignItems: 'center', }}>
                     {
                         notifications.length === 0 ? <Text>No notification</Text> :
-                        notifications.map((notification: Notification) => {
-                            return (
-                                <TouchableOpacity style={{
-                                    width: '90%',
-                                    paddingHorizontal: 20,
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                    paddingVertical: 10,
-                                    borderBottomWidth: 1,
-                                    borderBottomColor: css.colors.gray,
-                                }} onPress={() => {
-                                    notification.is_read = true;
-                                    Props.navigation.navigate('ShowOneExp', { exp: notification.exp })
-                                }}>
-                                    <Image source={{ uri: notification.exp.image ? notification.exp.image : notification.user.avatar }} style={{ width: 50, height: 50, borderRadius: 20 }} />
-                                    <View style={{ marginLeft: 10, flexDirection: "row" }}>
-                                        <Text>{notification.user.fullname}</Text>
-                                        <Text>{notification.content}</Text>
-                                    </View>
-                                    {
-                                        notification.is_read ? null :
-                                        <View style={{ position: 'absolute', left: 5, width: 5, height: 5, borderRadius: 2.5, backgroundColor: css.colors.primary }}></View>
-                                    }
-                                </TouchableOpacity>
-                            )
-                        })
+                            notifications.map((notification: Notification) => {
+                                return (
+                                    <TouchableOpacity style={{
+                                        width: '90%',
+                                        paddingHorizontal: 20,
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        paddingVertical: 10,
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: css.colors.gray,
+                                    }} onPress={() => {
+                                        setRead(notification);
+                                        Props.navigation.navigate('ShowOneExp', { exp: notification.exp })
+                                    }}>
+                                        {
+                                            notification.exp.image || notification.user.avatar ?
+                                                <Image source={{ uri: notification.exp.image ? notification.exp.image : notification.user.avatar ? notification.user.avatar : "" }} style={{ width: 50, height: 50, borderRadius: 20 }} />
+                                                :
+                                                <Image source={require('../../assets/images/user_avatar.png')} style={{ width: 50, height: 50, borderRadius: 20 }} />
+                                        }
+                                        <View style={{ marginLeft: 10, flexDirection: "row" }}>
+                                            <Text style={{ maxWidth: "90%", textAlign: "left" }}>{notification.user.fullname} {notification.content}</Text>
+                                        </View>
+                                        {
+                                            notification.is_read ? null :
+                                                <View style={{ position: 'absolute', left: 5, width: 5, height: 5, borderRadius: 2.5, backgroundColor: css.colors.primary }}></View>
+                                        }
+                                    </TouchableOpacity>
+                                )
+                            })
                     }
                 </View>
             </ScrollView>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Text, Image, Dimensions, ScrollView, TextInput } from "react-native";
+import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
 import Icon from "react-native-vector-icons/FontAwesome6";
@@ -28,6 +29,7 @@ const ShowOne = (props: any) => {
 
     useEffect(() => {
         setExp(props.route.params.exp);
+        letsRefresh();
         StorageHandler.retrieveData("user_id").then((value) => {
             if (value) setLoggedUserId(parseInt(value));
         });
@@ -42,49 +44,112 @@ const ShowOne = (props: any) => {
         }
     }, [exp]);
 
-    const sendCommnet = () => {
-        console.log("send comment");
-    }
-
-    const changeLikeState = (resp: Response, type: "LIKE" | "DISLIKE", command: "ADD" | "REMOVE") => {
-        let form = new FormData();
-        form.append("response_id", resp.id.toString());
-        form.append("type", type);
-        form.append("command", command);
-        axios.post(api.changeLikeState, form).then((res) => {
-            let data = res.data;
-            if (data.result === "true") {
-                let newResponse = response.map((item: Response) => {
-                    if (item.id === resp.id) {
-                        if (type === "LIKE") {
-                            if (command === "ADD") {
-                                item.likes.push(loggedUserId);
-                                if (item.dislikes.includes(loggedUserId)) {
-                                    item.dislikes = item.dislikes.filter((id) => id !== loggedUserId);
-                                }
-                            } else {
-                                item.likes = item.likes.filter((id) => id !== loggedUserId);
-                            }
-                        } else {
-                            if (command === "ADD") {
-                                item.dislikes.push(loggedUserId);
-                                if (item.likes.includes(loggedUserId)) {
-                                    item.likes = item.likes.filter((id) => id !== loggedUserId);
-                                }
-                            } else {
-                                item.dislikes = item.dislikes.filter((id) => id !== loggedUserId);
-                            }
-                        }
-                    }
-                    return item;
-                });
-                setResponse(newResponse);
-            }
-        }).catch((err) => {
-            console.log(err);
+    const letsRefresh = () => {
+        StorageHandler.retrieveData("session_id").then((session) => {
+            axios.get(api.show_exp + `/${exp.id}/${exp.title}`, {
+                headers: {
+                    Cookie: `session_id=${session};`
+                },
+            }).then((res) => {
+                setExp(res.data as Exp);
+            }).catch((err) => {
+                console.log(err);
+            });
         });
     }
 
+    const sendCommnet = () => {
+        StorageHandler.retrieveData("session_id").then((session) => {
+            let form = new FormData();
+            form.append("exp_id", exp.id.toString());
+            form.append("content", comment);
+            axios.post(api.add_exp_comment, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Cookie': `session_id=${session};`
+                },
+            }).then((res) => {
+                let data = res.data;
+                if (data.result === "true") {
+                    letsRefresh();
+                    setComment('');
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    }
+
+    const changeLikeState = (resp: Response, type: "LIKE" | "DISLIKE", command: "ADD" | "REMOVE") => {
+        StorageHandler.retrieveData("session_id").then((session) => {
+            if (!session) {
+                props.navigation.navigate("Login");
+                return;
+            }
+
+            let form = new FormData();
+            form.append("response_id", resp.id.toString());
+            form.append("type", type);
+            form.append("command", command);
+            axios.post(api.changeLikeState, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Cookie': `session_id=${session};`
+                },
+            }).then((res) => {
+                let data = res.data;
+                if (data.result === "true") {
+                    let newResponse = response.map((item: Response) => {
+                        if (item.id === resp.id) {
+                            if (type === "LIKE") {
+                                if (command === "ADD") {
+                                    item.likes.push(loggedUserId);
+                                    if (item.dislikes.includes(loggedUserId)) {
+                                        item.dislikes = item.dislikes.filter((id) => id !== loggedUserId);
+                                    }
+                                } else {
+                                    item.likes = item.likes.filter((id) => id !== loggedUserId);
+                                }
+                            } else {
+                                if (command === "ADD") {
+                                    item.dislikes.push(loggedUserId);
+                                    if (item.likes.includes(loggedUserId)) {
+                                        item.likes = item.likes.filter((id) => id !== loggedUserId);
+                                    }
+                                } else {
+                                    item.dislikes = item.dislikes.filter((id) => id !== loggedUserId);
+                                }
+                            }
+                        }
+                        return item;
+                    });
+                    setResponse(newResponse);
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    }
+
+    const delete_exp = () => {
+        StorageHandler.retrieveData("session_id").then((session) => {
+            if (!session) {
+                props.navigation.navigate("Login");
+                return;
+            }
+            axios.delete(api.delete_exp, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Cookie': `session_id=${session};`
+                },
+                params:{
+                    exp_id: exp.id
+                }
+            }).then(res => {
+                if (res.data == "true") props.navigation.goBack();
+            })
+        });
+    }
 
     return (
         <View style={styles.container}>
@@ -125,6 +190,7 @@ const ShowOne = (props: any) => {
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
+                            marginTop: 20,
                         }}>
                             {
                                 exp.user.avatar ?
@@ -133,10 +199,24 @@ const ShowOne = (props: any) => {
                                     <Image style={styles.avatar} source={require('../assets/images/user_avatar.png')} />
                             }
                             <Text style={[css.normalText, { marginLeft: 10 }]}>{exp.user.username}</Text>
+                            {
+                                loggedUserId == exp.user.id &&
+                                <Box style={{ position: "absolute", top: 10, right: 10 }}>
+                                    <Menu w="190" trigger={triggerProps => {
+                                        return <Pressable {...triggerProps}>
+                                            {/* <HamburgerIcon size={10} /> */}
+                                            <ThreeDotsIcon size={3} color={css.redesign.darker} />
+                                        </Pressable>
+                                    }}>
+                                        <Menu.Item onPress={delete_exp} >حذف</Menu.Item>
+                                    </Menu>
+                                </Box>
+                            }
                         </View>
                         <Text style={[css.normalText, { marginVertical: 20 }]}>{exp.content}</Text>
                         {
                             response.map((item, index) => {
+                                console.log("resp: ", item.likes, item.dislikes);
                                 return (
                                     <View key={index} style={{
                                         paddingVertical: 10,
@@ -165,11 +245,14 @@ const ShowOne = (props: any) => {
                                                         right: 10,
                                                     }}>
                                                         <Text style={[css.smallText, { marginLeft: 10 }]}>{item.likes.length}</Text>
-                                                        <Icon name="thumbs-up" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.likes.includes(loggedUserId)}
-                                                        onPress={()=>{changeLikeState(item, "LIKE", item.likes.includes(loggedUserId) ? "REMOVE" : "ADD")}} />
+                                                        <TouchableOpacity
+                                                            onPress={() => { changeLikeState(item, "LIKE", item.likes.includes(loggedUserId) ? "REMOVE" : "ADD") }} >
+                                                            <Icon name="thumbs-up" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.likes.includes(loggedUserId)} />
+                                                        </TouchableOpacity>
                                                         <Text style={[css.smallText, { marginLeft: 10 }]}>{item.dislikes.length}</Text>
-                                                        <Icon name="thumbs-down" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.dislikes.includes(loggedUserId)}
-                                                        onPress={()=>{changeLikeState(item, "DISLIKE", item.dislikes.includes(loggedUserId) ? "REMOVE" : "ADD")}} />
+                                                        <TouchableOpacity onPress={() => { changeLikeState(item, "DISLIKE", item.dislikes.includes(loggedUserId) ? "REMOVE" : "ADD") }} >
+                                                            <Icon name="thumbs-down" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.dislikes.includes(loggedUserId)} />
+                                                        </TouchableOpacity>
                                                     </View>
                                                 </View>
                                                 <Text style={[css.smallText, { paddingTop: 15 }]}>{item.content}</Text>
@@ -184,10 +267,10 @@ const ShowOne = (props: any) => {
             </ScrollView>
             <View style={styles.commentArea}>
 
-                <TextInput onChangeText={(text) => { setComment(text) }} multiline={true} style={styles.input} placeholder="نظر خود را بنویسید" />
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Icon name="paper-plane" size={25} solid={true} color={css.redesign.darker} onPress={sendCommnet} />
-                </View>
+                <TextInput value={comment} onChangeText={(text) => { setComment(text) }} multiline={true} style={styles.input} placeholder="نظر خود را بنویسید" />
+                <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} onPress={sendCommnet}>
+                    <Icon name="paper-plane" size={25} solid={true} color={css.redesign.darker} />
+                </TouchableOpacity>
             </View>
         </View>
     );

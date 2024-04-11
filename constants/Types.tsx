@@ -12,12 +12,12 @@ export type User = {
     id: number,
     username: string,
     fullname: string,
-    avatar: string,
+    avatar: string | null,
     skills?: Skill[],
     phone: string,
     bio: string | null | undefined,
-    expsCount?: number,
-    answersCount?: number,
+    exps_count: number,
+    answers_count: number,
 }
 
 export type Response = {
