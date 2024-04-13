@@ -31,7 +31,7 @@ export const api = {
     uploadProfileImage: serverAddress + 'users/profileupload', // POST
     get_top_users: serverAddress + 'gettopusers',  // GET
     get_top_users_detail: serverAddress + 'gettopuserdetail',  // GET
-    add_me2tops: serverAddress + 'users/top/add',
+    add_me2tops: 'https://bytecraft.ir/send_email', // POST Values: sender_name, sender_email, message_body, subject
     
     get_notifications: serverAddress + 'notifications', // GET
     set_notification_read: serverAddress + 'notifications/read', // GET

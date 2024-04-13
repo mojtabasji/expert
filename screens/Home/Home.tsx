@@ -88,14 +88,17 @@ const Home = (props: any) => {
     };
 
     const topUserRequest = () => {
-        axios.get(api.add_me2tops, {
+        let form = new FormData();
+        form.append("sender_name", currentUser.username);
+        form.append("sender_email", currentUser.phone);
+        form.append("message_body", `user information: Id: ${currentUser.id}, fullname: ${currentUser.fullname}, bio: ${currentUser.bio}, phone: ${currentUser.phone}`);
+        form.append("subject", "درخواست اضافه شدن به هایلایت ها از نسخه موبایل");
+        axios.post(api.add_me2tops, form, {
             headers: {
-                'Cookies': `session_id=${sessionValue};`
+                'Content-Type': 'multipart/form-data',
             }
         }).then(res => {
-            if (res.data == "treu") {
-                Alert.alert("درخواست شما ثبت شد. پس از تایید مدیر اضافه خواهید شد.");
-            }
+            Alert.alert("درخواست شما ثبت شد. پس از تایید مدیر اضافه خواهید شد.");
         }).catch(err => console.log(err));
     }
 
@@ -132,7 +135,7 @@ const Home = (props: any) => {
                                     :
                                     <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
                             }
-                            <Text style={[css.minimalText,{color: css.redesign.lightest}]}>{item.user?.username}</Text>
+                            <Text style={[css.minimalText, { color: css.redesign.lightest }]}>{item.user?.username}</Text>
                         </View>
                         <View style={{ marginBottom: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
                             <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold" }}>{item.title}</Text>
@@ -170,15 +173,20 @@ const Home = (props: any) => {
                     }} >
                         <ScrollView horizontal={true} >
                             <TouchableOpacity onPress={() => {
-                                Alert.alert("هایلایت", "آیا میخواهید به هایلایت ها اضافه شوید؟؟", [
-                                    {
-                                        text: "بله",
-                                        onPress: topUserRequest
-                                    },
-                                    {
-                                        text: "خیر"
-                                    }
-                                ])
+                                if (top_users.some(item => item.id == currentUser.id)) {
+                                    change_screen("TopUserDetail", { topUserId: currentUser.id });
+                                }
+                                else {
+                                    Alert.alert("هایلایت", "آیا میخواهید به هایلایت ها اضافه شوید؟؟", [
+                                        {
+                                            text: "بله",
+                                            onPress: topUserRequest
+                                        },
+                                        {
+                                            text: "خیر"
+                                        }
+                                    ])
+                                }
                             }} style={{
                                 width: 80,
                                 height: 80,
@@ -212,7 +220,10 @@ const Home = (props: any) => {
                                     justifyContent: "center",
                                     alignItems: "center",
                                 }}>
-                                    <Icon name="plus" size={12} color={css.colors.white} />
+                                    {
+                                        !top_users.some(item => item.id == currentUser.id) &&
+                                            <Icon name="plus" size={12} color={css.colors.white} />
+                                    }
                                 </View>
                             </TouchableOpacity>
                             {
@@ -262,7 +273,7 @@ const Home = (props: any) => {
                                 exps.map((item, index) => render_items(item, index))
                                 :
                                 // <ActivityIndicator size={'large'} color={css.redesign.darker} />
-                                <Text style={[css.normalText,{color:css.redesign.darker, marginHorizontal:20, marginTop:100, textAlign:"justify"}]}>چیزی برای نمایش وجود ندارد. مهارت های خود را ویرایش کنید.</Text>
+                                <Text style={[css.normalText, { color: css.redesign.darker, marginHorizontal: 20, marginTop: 100, textAlign: "justify" }]}>چیزی برای نمایش وجود ندارد. مهارت های خود را ویرایش کنید.</Text>
                         }
                     </View>
                 </View>

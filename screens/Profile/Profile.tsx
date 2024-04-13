@@ -133,6 +133,21 @@ const Profile = (Props: any) => {
         });
     }
 
+    const topUserRequest = () => {
+        let form = new FormData();
+        form.append("sender_name", user.username);
+        form.append("sender_email", user.phone);
+        form.append("message_body", `user information: Id: ${user.id}, fullname: ${user.fullname}, bio: ${user.bio}, phone: ${user.phone}`);
+        form.append("subject", "درخواست اضافه شدن به هایلایت ها از نسخه موبایل");
+        axios.post(api.add_me2tops, form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        }).then(res => {
+            Alert.alert("درخواست شما ثبت شد. پس از تایید مدیر اضافه خواهید شد.");
+        }).catch(err => console.log(err));
+    }
+
     const LogOut = () => {
         console.log("Log out");
         StorageHandler.removeData("session_id").then(() => {
@@ -159,7 +174,7 @@ const Profile = (Props: any) => {
                                 <ThreeDotsIcon size={8} color={css.redesign.darker} />
                             </Pressable>
                         }}>
-                            <Menu.Item isDisabled>درخواست هایلایت</Menu.Item>
+                            <Menu.Item onPress={topUserRequest}>اضافه شدن به هایلایت</Menu.Item>
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("EditProfile", { user: user });
                             }}>ویرایش پروفایل</Menu.Item>
