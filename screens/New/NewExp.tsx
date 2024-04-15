@@ -24,6 +24,8 @@ const NewExp = (props: any) => {
     const [newSkill, setNewSkill] = useState("" as string | undefined);
     const [showDropDownList, setShowDropDownList] = useState(false);
 
+    const [retry, setRetry] = useState(false);
+
     useEffect(() => {
         StorageHandler.retrieveData("session_id").then((data) => {
             setSession(data);
@@ -35,9 +37,12 @@ const NewExp = (props: any) => {
                 setSkills(res.data);
             }).catch(err => {
                 console.log(err);
+                setTimeout(() => {
+                    setRetry(!retry);
+                }, 3000);
             });
         });
-    }, []);
+    }, [retry]);
 
     useEffect(() => {
         setNewSkill("");

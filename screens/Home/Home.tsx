@@ -128,14 +128,14 @@ const Home = (props: any) => {
                                 borderTopRightRadius: 15,
                             }} />
                         }
-                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', position: 'absolute', right: 0, top: 10 }}>
+                        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', position: image_uri ? 'absolute' : 'relative', right: 0, top: 10 }}>
                             {
                                 item.user?.avatar ?
                                     <Image style={styles.avatar} source={{ uri: item.user?.avatar }} />
                                     :
                                     <Image style={styles.avatar} source={require('../../assets/images/user_avatar.png')} />
                             }
-                            <Text style={[css.minimalText, { color: css.redesign.lightest }]}>{item.user?.username}</Text>
+                            <Text style={[css.smallText, { color: image_uri ? css.redesign.lightest : css.redesign.darker }]}>{item.user?.username}</Text>
                         </View>
                         <View style={{ marginBottom: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
                             <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold" }}>{item.title}</Text>

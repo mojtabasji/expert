@@ -76,7 +76,7 @@ class css {
     static get btn_text(): object {
         return {
             fontFamily: 'IRANSansMobile',
-            fontSize: RFValue(14),
+            fontSize: RFValue(16),
             color: '#000',
             textAlign: 'center',
             fontWeight: 'bold',

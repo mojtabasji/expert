@@ -18,6 +18,7 @@ const Register = (props: any) => {
 
     const [is_username_valid, setIsUsernameValid] = useState(true);
     const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
+    const [show_privacy, setShowPrivacy] = useState(false);
 
     const checkUsernameValidity = () => {
         axios.get(api.is_username_valid + "username=" + username).then(response => {
@@ -74,18 +75,17 @@ const Register = (props: any) => {
                     justifyContent: 'space-around',
                     alignItems: 'center',
                 }}>
+                    <Text style={css.largeText}>ثبت نام</Text>
+                    <Text style={[css.normalText, { color: 'gray' }]}>لطفا اطلاعات خود را وارد کنید</Text>
                     <View style={styles.InputArea}>
                         <Text style={[css.normalText, { marginBottom: 10 }]}>نام کاربری:</Text>
-                        <TextInput style={[css.smallText, styles.Input]} placeholder="نام کاربری"
+                        <TextInput style={[css.smallText, styles.Input, {
+                            borderWidth: 1,
+                            borderColor: is_username_valid ? "green" : 'red',
+                        }]} placeholder="نام کاربری"
                             onChangeText={text => setUsername(text)}
                             value={username}
                             onBlur={checkUsernameValidity} />
-                        {
-                            is_username_valid ?
-                                <Icon name="check" size={20} color="green" />
-                                :
-                                <Icon name="times" size={20} color="red" />
-                        }
                     </View>
                     <View style={styles.InputArea}>
                         <Text style={[css.normalText, { marginBottom: 10 }]}> نام و نام خانوادگی:</Text>
@@ -122,18 +122,56 @@ const Register = (props: any) => {
                             backgroundColor: css.redesign.darker,
                         }}
                             onPress={register} >
-                            <Text style={{ color: css.redesign.lightest }}>ثبت نام</Text>
+                            <Text style={[css.smallText, { color: css.redesign.lightest }]}>ثبت نام</Text>
                         </TouchableOpacity>
-
-                        <TouchableOpacity
+                        <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }}
+                            onPress={() => { setShowPrivacy(true) }}>
+                            <Text style={[css.normalText, { color: css.redesign.darker, marginHorizontal: 5 }]}>شرایط حریم خصوصی شما.</Text>
+                            <Icon name="info-circle" size={20} color={css.redesign.darker} style={{ marginRight: 5 }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flexDirection: 'row', marginTop: 10 }}
                             onPress={() => {
                                 props.change_screen("Login");
                             }}>
-                            <Text style={[css.normalText, { color: css.redesign.darker }]}>ورود</Text>
+                            <Text style={[css.titleText, { color: css.redesign.darker, fontWeight: "bold" }]}>ورود</Text>
+                            <Text style={[css.normalText, { color: css.redesign.darker, marginHorizontal: 5 }]}>قبلا ثبت نام کرده ام.</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
+            {
+                show_privacy &&
+                <View style={styles.privacyArea}>
+                    <ScrollView contentContainerStyle={{ marginTop: 20, width: '100%', alignItems: "flex-end" }}>
+
+                        <Text style={[css.normalText, { marginTop: 10 }]}>
+                            • نام کاربری شما به صورت  یکتا بوده و نمی توانید تغییر کند.
+                        </Text>
+                        <Text style={[css.normalText, { marginTop: 10 }]}>
+                            • نام کاربری به صورت عمومی نمایش داده می شود.
+                        </Text>
+                        <Text style={[css.normalText, { marginTop: 10 }]}>
+                            • نام و نام خانوادگی شما صرفا برای نمایش در پروفایل شما استفاده می شود و به صورت عمومی قابل مشاهده است.
+                        </Text>
+                        <Text style={[css.normalText, { marginTop: 10 }]}>
+                            • شماره تلفن و ایمیل شما برای تایید حساب کاربری استفاده می شود. و به صورت خصوصی نگهداری  شده و برای سایر کاربران قابل مشاهده نیست.
+                        </Text>
+                        <Text style={[css.normalText, { marginTop: 10 }]}>
+                            • رمز عبور شما به صورت رمزنگاری شده ذخیره می شود و به هیچ عنوان به دیگران نمایش داده نمی شود.
+                        </Text>
+                    </ScrollView>
+                    <TouchableOpacity style={{
+                        width: '75%', height: 40, borderRadius: 20,
+                        justifyContent: 'center', alignItems: 'center', marginBottom: 10,
+                        backgroundColor: css.redesign.darker,
+                    }}
+                        onPress={() => {
+                            setShowPrivacy(false);
+                        }}>
+                        <Text style={[css.normalText, { color: css.redesign.lightest, textAlign: 'center' }]}>تایید</Text>
+                    </TouchableOpacity>
+                </View>
+            }
         </LinearGradient>
     );
 }
@@ -160,6 +198,20 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
     },
+    privacyArea: {
+        position: 'absolute',
+        width: Dimensions.get("window").width * .9,
+        height: Dimensions.get("window").height * .85,
+        backgroundColor: css.redesign.lightest,
+        borderWidth: 1,
+        borderColor: css.redesign.darker,
+        alignSelf: 'center',
+        borderRadius: 20,
+        opacity: 1,
+        marginTop: 30,
+        padding: 10,
+        alignItems: 'center',
+    }
 });
 
 export default Register;
