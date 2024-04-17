@@ -1,4 +1,4 @@
-package com.expert
+package com.bytecraft.expert
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

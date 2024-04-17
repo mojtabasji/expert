@@ -41,3 +41,7 @@ export type Notification = {
     is_read: boolean,
     created_at: string
 }
+
+export type Report = {
+    content_type : "EXP" | "RESPONSE" | "USER" | "HIGHLIGHT"
+}

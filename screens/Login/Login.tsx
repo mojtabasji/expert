@@ -35,7 +35,6 @@ const Login = (props: any) => {
         let form = new FormData();
         form.append("username", username);
         form.append("password", password);
-        console.log(api.login, form);
         axios.post(api.login, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',

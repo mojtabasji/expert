@@ -25,6 +25,7 @@ export const api = {
     my_responses: serverAddress + 'users/responses',    // GET Values: user_id
     add_exp_comment: serverAddress + 'exps/responses/add',  // POST Values: exp_id, content
     changeLikeState: serverAddress + 'responses/like', // POST
+    delete_response: serverAddress + 'exps/responses/remove', // POST Values: response_id
     
     get_user_info: serverAddress + 'users/show/',
     update_user_info: serverAddress + 'users/update',   // POST Values: fullname, bio, password?, phone, 
@@ -37,6 +38,7 @@ export const api = {
     set_notification_read: serverAddress + 'notifications/read', // GET
 
     search: serverAddress + 'exps/search', // GET Values: query
+
     
 }
 

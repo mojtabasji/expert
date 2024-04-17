@@ -83,6 +83,8 @@ const NewExp = (props: any) => {
                 setImage({ uri: "" });
                 props.navigation.navigate("Profile");
             }
+            else if (res.data.ww == "true")
+                Alert.alert("خطا", "مقدار وارد شده شامل محتوی نا مناسب است.");
         }).catch(err => {
             console.log(err);
         });
@@ -229,7 +231,10 @@ const NewExp = (props: any) => {
                                 },
                                 withCredentials: true,
                             }).then(res => {
-                                setSkills(res.data);
+                                if (res.data.result === "false" && res.data.ww == "true")
+                                    Alert.alert("خطا", "مقدار وارد شده شامل محتوی نا مناسب است.");
+                                else
+                                    setSkills(res.data);
                                 setShowPopup(false);
                             }).catch(err => {
                                 console.log(err);

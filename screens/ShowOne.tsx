@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Image, Dimensions, ScrollView, TextInput } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Image, Dimensions, ScrollView, TextInput, Alert } from "react-native";
 import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/FontAwesome6";
 import axios from "axios";
 
 import css from "../constants/css";
-import { Exp, Response, User } from "../constants/Types";
+import { Exp, Response, User, Report } from "../constants/Types";
 import { StorageHandler } from "../constants/StorageHandler";
 import { api } from "../constants/Const";
 
@@ -59,6 +59,30 @@ const ShowOne = (props: any) => {
         });
     }
 
+    const delete_response = (resp: Response) => {
+        StorageHandler.retrieveData("session_id").then((session) => {
+            if (!session) {
+                props.navigation.navigate("Login");
+                return;
+            }
+            let form = new FormData();
+            form.append("response_id", resp.id.toString());
+            axios.post(api.delete_response, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Cookie': `session_id=${session};`
+                },
+            }).then((res) => {
+                let data = res.data;
+                if (data.result === "true") {
+                    letsRefresh();
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    }
+
     const sendCommnet = () => {
         StorageHandler.retrieveData("session_id").then((session) => {
             let form = new FormData();
@@ -75,6 +99,8 @@ const ShowOne = (props: any) => {
                     letsRefresh();
                     setComment('');
                 }
+                else if(data.ww == "true")
+                    Alert.alert("خطا", "مقدار وارد شده شامل محتوی نا مناسب است.");
             }).catch((err) => {
                 console.log(err);
             });

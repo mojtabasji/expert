@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Button, TextInput, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Button, TextInput, ScrollView, TouchableWithoutFeedback, Alert } from 'react-native';
 import SearchableDropDown from 'react-native-searchable-dropdown';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome6';
@@ -124,7 +124,7 @@ const SkillsEdit = (props: any) => {
                     })}
                 </ScrollView>
                 <TouchableOpacity onPress={() => { setShowPopup(true); }}
-                style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 10 }}>
+                    style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 10 }}>
                     <Icon name="square-plus" size={18} color={css.redesign.darker} solid={true} />
                     <Text style={[css.smallText, { textAlign: 'center', fontWeight: 'bold', marginHorizontal: 10, color: css.redesign.darker }]}>افزودن مهارت جدید به پایگاه داده</Text>
                 </TouchableOpacity>
@@ -183,7 +183,7 @@ const SkillsEdit = (props: any) => {
                 {
                     showPopup &&
                     <View style={styles.popup}>
-                        <Text style={[css.normalText,{ fontWeight:"bold" }]}>افزودن مهارت جدید به لیست:</Text>
+                        <Text style={[css.normalText, { fontWeight: "bold" }]}>افزودن مهارت جدید به لیست:</Text>
                         <TextInput placeholder="مهارت جدید" style={{
                             borderRadius: 20,
                             backgroundColor: css.redesign.primary,
@@ -193,7 +193,6 @@ const SkillsEdit = (props: any) => {
                             setNewSkill(text);
                         }} />
                         <TouchableOpacity onPress={() => {
-                            console.log(newSkill);
                             if (newSkill === "")
                                 return;
                             let form = new FormData();
@@ -205,9 +204,11 @@ const SkillsEdit = (props: any) => {
                                 },
                                 withCredentials: true,
                             }).then(res => {
-                                setSkills(res.data);
+                                if (res.data.result === "false" && res.data.ww == "true")
+                                    Alert.alert("خطا", "مقدار وارد شده شامل محتوی نا مناسب است.");
+                                else
+                                    setSkills(res.data);
                                 setShowPopup(false);
-                                console.log(res.data);
                             }).catch(err => {
                                 console.log(err);
                             });
@@ -219,7 +220,7 @@ const SkillsEdit = (props: any) => {
                             justifyContent: "center",
                             alignItems: "center",
                         }}>
-                            <Text style={[css.smallText,{color: css.redesign.lightest}]}>افزودن</Text>
+                            <Text style={[css.smallText, { color: css.redesign.lightest }]}>افزودن</Text>
                         </TouchableOpacity>
                     </View>
                 }
