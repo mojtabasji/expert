@@ -21,5 +21,11 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+      <meta-data
+        android:name="com.najva.sdk.metadata.API_KEY"
+        android:value="0c5d8b3d-42cc-453c-bb04-bf3ee012218f" />
+      <meta-data
+        android:name="com.najva.sdk.metadata.WEBSITE_ID"
+        android:value="56118" />
     </application>
 </manifest>

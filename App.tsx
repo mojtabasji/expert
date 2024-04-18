@@ -10,7 +10,16 @@ import { StorageHandler } from './constants/StorageHandler';
 import LoginHandler from './constants/LoginHandler';
 import Welcome from './screens/Welcome';
 import BTabHandler from './screens/BTabHandler';
+import najva from "react-native-najva";
 
+const initializePush = async () => {
+  const apikey = "0c5d8b3d-42cc-453c-bb04-bf3ee012218f"; // get api key from najva panel
+  const websiteId = 56118; // get website id from najva panel
+
+  await najva.initialize(apikey, websiteId, false /* location */, false);
+  const najvaToken = await najva.getSubscribedToken();
+  console.log("Najva token: ", najvaToken);
+};
 
 function App(): React.JSX.Element {
   const [loggedIn, setLoggedIn] = React.useState(true);
@@ -19,6 +28,7 @@ function App(): React.JSX.Element {
   }
 
   useEffect(() => {
+    initializePush();
     StorageHandler.retrieveData("session_id").then(data => {
       if (data == undefined) setLoggedIn(false);
       StorageHandler.retrieveData("user_id").then(id => {
