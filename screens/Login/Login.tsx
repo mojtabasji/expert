@@ -93,11 +93,11 @@ const Login = (props: any) => {
                         </View>
                         <TouchableOpacity style={{
                             width: '75%',
-                            height: 40,
                             borderRadius: 30,
                             backgroundColor: css.redesign.darker,
                             justifyContent: 'center',
                             alignItems: 'center',
+                            paddingVertical: 5,
                         }}
                             onPress={login}
                         >
@@ -112,7 +112,7 @@ const Login = (props: any) => {
                         }} >
                             <TouchableOpacity style={{
                                 width: '45%',
-                                height: 40,
+                                paddingVertical: 5,
                                 borderRadius: 20,
                                 backgroundColor: css.redesign.gray,
                                 justifyContent: 'center',

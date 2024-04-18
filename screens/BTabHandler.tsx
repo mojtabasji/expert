@@ -43,11 +43,11 @@ const BTabHandler = () => {
                     // tabBarShowLabel: false,
                     tabBarLabel: ({ focused, color }) => {
                         let name;
-                        if (route.name == "HSHandler") name = "Home";
-                        if (route.name == "SSHandler") name = "Search";
-                        if (route.name == "NESHandler") name = "New";
-                        if (route.name == "Notification") name = "Notif";
-                        if (route.name == "user") name = "User";
+                        if (route.name == "HSHandler") name = "خانه";
+                        if (route.name == "SSHandler") name = "جستجو";
+                        if (route.name == "NESHandler") name = "جدید";
+                        if (route.name == "Notification") name = "اعلان";
+                        if (route.name == "user") name = "کاربر";
                         return <Text style={{ color: color, fontSize: 12, textAlign: 'center' }}>{name}</Text>
                     },
                     tabBarStyle: {

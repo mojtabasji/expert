@@ -39,6 +39,8 @@ export const api = {
 
     search: serverAddress + 'exps/search', // GET Values: query
 
+    report: serverAddress + 'report'    // POST Values: description, content_type, content, detail
+
     
 }
 

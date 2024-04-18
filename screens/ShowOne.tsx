@@ -25,6 +25,12 @@ const ShowOne = (props: any) => {
     const [scaled_height, setScaledHeight] = useState(0);
     const [comment, setComment] = useState('' as string);
     const [loggedUserId, setLoggedUserId] = useState(-1 as number);
+    const [reportPanel, setReportPanel] = useState({
+        description: "",
+        content_type: "EXP" as "EXP" | "RESPONSE" | "USER" | "HIGHLIGHT",
+        visible: false,
+        item: {} as Exp | Response,
+    });
 
 
     useEffect(() => {
@@ -99,8 +105,54 @@ const ShowOne = (props: any) => {
                     letsRefresh();
                     setComment('');
                 }
-                else if(data.ww == "true")
+                else if (data.ww == "true")
                     Alert.alert("خطا", "مقدار وارد شده شامل محتوی نا مناسب است.");
+            }).catch((err) => {
+                console.log(err);
+            });
+        });
+    }
+
+    const report = () => {
+        let detail: string;
+        switch (reportPanel.content_type) {
+            case "EXP":
+                detail = "یک EXP از نوع " + exp.title + " با شناسه " + exp.id + " گزارش شده است.";
+                break;
+            case "RESPONSE":
+                detail = "یک پاسخ ا بر روی exp " + exp.title + " گزارش شده است." + " شناسه پاسخ: " + reportPanel.item.id;
+                break;
+            case "USER":
+                detail = "یک کاربر با نام کاربری " + exp.user.username + " گزارش شده است.";
+                break;
+            case "HIGHLIGHT":
+                detail = "هایلایت کاربر " + reportPanel.item.user.username + " گزارش شده است.";
+                break;
+            default:
+                detail = "خطای ناشناخته";
+                break;
+        }
+        StorageHandler.retrieveData("session_id").then((session) => {
+            if (!session) {
+                props.navigation.navigate("Login");
+                return;
+            }
+            let form = new FormData();
+            form.append("content_type", reportPanel.content_type);
+            form.append("content", reportPanel.item.id.toString());
+            form.append("description", reportPanel.description);
+            form.append("detail", detail);
+            axios.post(api.report, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Cookie': `session_id=${session};`
+                },
+            }).then((res) => {
+                let data = res.data;
+                if (data.result === "true") {
+                    setReportPanel({ ...reportPanel, visible: false });
+                    Alert.alert("گزارش", ". گزارش شما با موفقیت ثبت شد. نتیجه بررسی به اطلاع شما خواهد رسید");
+                }
             }).catch((err) => {
                 console.log(err);
             });
@@ -169,7 +221,7 @@ const ShowOne = (props: any) => {
                     'Content-Type': 'multipart/form-data',
                     'Cookie': `session_id=${session};`
                 },
-                params:{
+                params: {
                     exp_id: exp.id
                 }
             }).then(res => {
@@ -226,19 +278,22 @@ const ShowOne = (props: any) => {
                                     <Image style={styles.avatar} source={require('../assets/images/user_avatar.png')} />
                             }
                             <Text style={[css.normalText, { marginLeft: 10 }]}>{exp.user.username}</Text>
-                            {
-                                loggedUserId == exp.user.id &&
-                                <Box style={{ position: "absolute", top: 10, right: 10 }}>
-                                    <Menu w="190" trigger={triggerProps => {
-                                        return <Pressable {...triggerProps}>
-                                            {/* <HamburgerIcon size={10} /> */}
-                                            <ThreeDotsIcon size={3} color={css.redesign.darker} />
-                                        </Pressable>
-                                    }}>
+                            <Box style={{ position: "absolute", top: 10, right: 10 }}>
+                                <Menu w="190" trigger={triggerProps => {
+                                    return <Pressable {...triggerProps}>
+                                        {/* <HamburgerIcon size={10} /> */}
+                                        <ThreeDotsIcon size={3} color={css.redesign.darker} />
+                                    </Pressable>
+                                }}>
+                                    {
+                                        loggedUserId == exp.user.id &&
                                         <Menu.Item onPress={delete_exp} >حذف</Menu.Item>
-                                    </Menu>
-                                </Box>
-                            }
+                                    }
+                                    <Menu.Item onPress={() => {
+                                        setReportPanel({ ...reportPanel, visible: true, content_type: "EXP", item: exp })
+                                    }}>گزارش</Menu.Item>
+                                </Menu>
+                            </Box>
                         </View>
                         <Text style={[css.normalText, { marginVertical: 20 }]}>{exp.content}</Text>
                         {
@@ -279,6 +334,31 @@ const ShowOne = (props: any) => {
                                                         <TouchableOpacity onPress={() => { changeLikeState(item, "DISLIKE", item.dislikes.includes(loggedUserId) ? "REMOVE" : "ADD") }} >
                                                             <Icon name="thumbs-down" size={15} style={{ color: css.redesign.darker, marginLeft: 10 }} solid={item.dislikes.includes(loggedUserId)} />
                                                         </TouchableOpacity>
+                                                        <Box style={{ marginLeft: 20 }}>
+                                                            <Menu w="190" trigger={triggerProps => {
+                                                                return <Pressable {...triggerProps}>
+                                                                    <ThreeDotsIcon size={3} color={css.redesign.darker} />
+                                                                </Pressable>
+                                                            }}>
+                                                                {
+                                                                    loggedUserId == item.user.id &&
+                                                                    <Menu.Item onPress={() => {
+                                                                        Alert.alert("حذف پاسخ", "آیا از پاک کردن این پاسخ اطمینان دارید؟", [
+                                                                            {
+                                                                                text: "بله",
+                                                                                onPress: () => delete_response(item),
+                                                                            },
+                                                                            {
+                                                                                text: "خیر",
+                                                                            }
+                                                                        ])
+                                                                    }} >حذف</Menu.Item>
+                                                                }
+                                                                <Menu.Item onPress={() => {
+                                                                    setReportPanel({ ...reportPanel, visible: true, content_type: "RESPONSE", item: item })
+                                                                }}>گزارش</Menu.Item>
+                                                            </Menu>
+                                                        </Box>
                                                     </View>
                                                 </View>
                                                 <Text style={[css.smallText, { paddingTop: 15 }]}>{item.content}</Text>
@@ -298,6 +378,42 @@ const ShowOne = (props: any) => {
                     <Icon name="paper-plane" size={25} solid={true} color={css.redesign.darker} />
                 </TouchableOpacity>
             </View>
+            {reportPanel.visible &&
+                <View style={styles.reportArea}>
+                    <TextInput
+                        style={[styles.input, { borderWidth: 1, borderColor: css.redesign.primary, minHeight: 100, textAlignVertical: 'top', }]}
+                        placeholder="توضیحات گزارش"
+                        multiline={true}
+                        value={reportPanel.description}
+                        onChangeText={(text) => setReportPanel({ ...reportPanel, description: text })}
+                    />
+                    <View style={{
+                        flexDirection: "row",
+                        justifyContent: 'space-around',
+                        marginTop: 20,
+
+                    }} >
+                        <TouchableOpacity style={{
+                            backgroundColor: css.redesign.darker,
+                            borderRadius: 20,
+                            width: "40%",
+                            padding: 10,
+                            alignItems: 'center',
+                        }} onPress={report}>
+                            <Text style={[css.normalText, { color: css.redesign.lightest }]}>ارسال گزارش</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{
+                            backgroundColor: css.redesign.darker,
+                            borderRadius: 20,
+                            width: "40%",
+                            padding: 10,
+                            alignItems: 'center',
+                        }} onPress={() => setReportPanel({ item: {} as Exp | Response, visible: false, description: "", content_type: "EXP" })}>
+                            <Text style={[css.normalText, { color: css.redesign.lightest }]}>انصراف</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            }
         </View>
     );
 }
@@ -343,7 +459,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-    }
+    },
+    reportArea: {
+        position: 'absolute',
+        alignSelf: 'center',
+        width: '90%',
+        minHeight: 200,
+        backgroundColor: css.redesign.lightest,
+        borderColor: css.redesign.darker,
+        borderWidth: 1,
+        borderRadius: 20,
+        padding: 20,
+        zIndex: 3,
+        top: 100,
+    },
 });
 
 export default ShowOne;
