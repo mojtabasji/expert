@@ -39,9 +39,10 @@ export const api = {
 
     search: serverAddress + 'exps/search', // GET Values: query
 
-    report: serverAddress + 'report'    // POST Values: description, content_type, content, detail
+    report: serverAddress + 'report',    // POST Values: description, content_type, content, detail
 
-    
+    get_push_notification: serverAddress + 'get_push_notification', // Post
+    set_push_notification_read: serverAddress + 'set_push_notification_read', // Post Values: notification_id
 }
 
 

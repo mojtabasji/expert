@@ -43,6 +43,11 @@ const Register = (props: any) => {
             Alert.alert("رمز عبور و تکرار آن باید یکسان باشد");
             return;
         }
+        if (!privacyState) {
+            Alert.alert("شما باید شرایط حریم خصوصی را بپذیرید");
+            return;
+        }
+
         let form = new FormData();
         form.append("username", username);
         form.append("password", password);

@@ -22,10 +22,9 @@
         </intent-filter>
       </activity>
       <meta-data
-        android:name="com.najva.sdk.metadata.API_KEY"
-        android:value="0c5d8b3d-42cc-453c-bb04-bf3ee012218f" />
-      <meta-data
-        android:name="com.najva.sdk.metadata.WEBSITE_ID"
-        android:value="56118" />
+      android:name="com.bytecraft.expert.notification_channel_id"
+      android:value="com.bytecraft.expert.notification_channel_id" />
     </application>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 </manifest>

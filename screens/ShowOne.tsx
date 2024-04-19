@@ -150,7 +150,7 @@ const ShowOne = (props: any) => {
             }).then((res) => {
                 let data = res.data;
                 if (data.result === "true") {
-                    setReportPanel({ ...reportPanel, visible: false });
+                    setReportPanel({ ...reportPanel, visible: false, description: "" });
                     Alert.alert("گزارش", ". گزارش شما با موفقیت ثبت شد. نتیجه بررسی به اطلاع شما خواهد رسید");
                 }
             }).catch((err) => {

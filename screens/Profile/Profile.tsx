@@ -181,6 +181,9 @@ const Profile = (Props: any) => {
                             <Menu.Item onPress={() => {
                                 Props.navigation.navigate("SkillsEdit", { user: user });
                             }}>ویرایش مهارت ها</Menu.Item>
+                            <Menu.Item onPress={() => {
+                                Props.navigation.navigate("Settings", { user: user });
+                            }}>تنظیمات</Menu.Item>
                             <Menu.Item style={{ borderTopWidth: 1, borderTopColor: css.colors.fourth }} onPress={() => {
                                 Alert.alert("خروج", "آیا مطمین هستید که میخواهید از حساب کاربری خود خارج شودید؟", [
                                     {

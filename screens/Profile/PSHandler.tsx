@@ -6,6 +6,7 @@ import ShowOne from "../ShowOne";
 import FullScreenImage from "../FullScreenImage";
 import SkillsEdit from "./SkillsEdit";
 import EditProfile from "./EditProfile";
+import Settings from "./Settings";
 
 const ProfileStack = createNativeStackNavigator();
 const HSHandler = ()=>{
@@ -18,6 +19,7 @@ const HSHandler = ()=>{
             <ProfileStack.Screen name="FullScreenImage" component={FullScreenImage} />
             <ProfileStack.Screen name="SkillsEdit" component={SkillsEdit} />
             <ProfileStack.Screen name="EditProfile" component={EditProfile} />
+            <ProfileStack.Screen name="Settings" component={Settings} />
         </ProfileStack.Navigator>
     );
 }
