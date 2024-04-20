@@ -71,78 +71,63 @@ PushNotification.configure({
 const sleep = (time: any) => new Promise((resolve: any) => setTimeout(() => resolve(), time));
 
 const veryIntensiveTask = async (taskDataArguments: any) => {
-  // Handle notifications Here
-  StorageHandler.retrieveData("notifications_is_enable").then(async data => {
-    if (data == undefined) {
-      StorageHandler.storeData("notifications_is_enable", "true");
-    }
-    if (data == "true" || data == undefined) {
-
-      // For loop with a delay
-      const { delay } = taskDataArguments;
-      await new Promise(async (resolve) => {
-        while (BackgroundService.isRunning()) {
-          console.log("background service is running ", Date.now());
-          let session: any;
-          await StorageHandler.retrieveData("session_id").then(data => {
-            session = `session_id=${data};`
+  // Example of an infinite loop task
+  const { delay } = taskDataArguments;
+  await new Promise(async (resolve) => {
+    while (BackgroundService.isRunning()) {
+      console.log("Running background service");
+      let session: any;
+      await StorageHandler.retrieveData("session_id").then(data => {
+        session = `session_id=${data};`
+      });
+      axios.post(api.get_push_notification, {}, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': session
+        },
+        withCredentials: true
+      }).then(res => {
+        if (res.data.result == "true") {
+          let not_ids: any = [];
+          res.data.notifications.forEach((notification: any) => {
+            if (notification.is_pushed == "false" || notification.is_pushed == false) {
+              not_ids.push(notification.id);
+              PushNotification.localNotification({
+                channelId: 'com.bytecraft.expert.notification_channel_id',
+                title: notification.title,
+                message: notification.content,
+                vibrate: true,
+                vibration: 300,
+                playSound: true,
+                soundName: 'default',
+                invokeApp: true,
+                actions: [],
+              });
+            }
           });
-          axios.post(api.get_push_notification, {}, {
+          let form = new FormData();
+          form.append("notification_ids", not_ids.join(","));
+          axios.post(api.set_push_notification_read, form, {
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'multipart/form-data',
               'Cookie': session
             },
             withCredentials: true
           }).then(res => {
             if (res.data.result == "true") {
-              let not_ids: any = [];
-              res.data.notifications.forEach((notification: any) => {
-                if (notification.is_pushed == "false" || notification.is_pushed == false) {
-                  not_ids.push(notification.id);
-                  PushNotification.localNotification({
-                    channelId: 'com.bytecraft.expert.notification_channel_id',
-                    title: notification.title,
-                    message: notification.content,
-                    vibrate: true,
-                    vibration: 300,
-                    playSound: true,
-                    soundName: 'default',
-                    invokeApp: true,
-                    actions: [],
-                  });
-                }
-              });
-              let form = new FormData();
-              form.append("notification_ids", not_ids.join(","));
-              axios.post(api.set_push_notification_read, form, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  'Cookie': session
-                },
-                withCredentials: true
-              }).then(res => {
-                if (res.data.result == "true") {
-                  console.log("Notifications are marked as pushed");
-                }
-              }).catch(err => { console.log(err); });
+              console.log("Notifications are marked as pushed");
             }
           }).catch(err => { console.log(err); });
-          StorageHandler.retrieveData("notifications_is_enable").then(data => {
-            if (data == "false") {
-              console.log("background service is stopped here ");
-              BackgroundService.stop();
-              return;
-            }
-          });
-          await sleep(delay);
-          console.log("reached here");
+        }
+      }).catch(err => { console.log(err); });
+      StorageHandler.retrieveData("notifications_is_enable").then(data => {
+        if (data == "false") {
+          console.log("background service is stopped here ");
+          BackgroundService.stop();
+          return;
         }
       });
-    }
-    if (data == "false") {
-      console.log("background service is stopped");
-      BackgroundService.stop();
-      return;
+      await sleep(delay);
     }
   });
 };
@@ -158,13 +143,20 @@ const options = {
   color: '#ff00ff',
   linkingURI: 'https://expert.bytecraft.ir',
   parameters: {
-    delay: 1000 * 60 * 1,
+    delay: 1000 * 60 * 5,
   },
 };
 
 const InitializeBackgroundService = async () => {
-  await BackgroundService.start(veryIntensiveTask, options);
-  await BackgroundService.updateNotification({taskDesc: 'New ExampleTask description'});
+  StorageHandler.retrieveData("notifications_is_enable").then(async data => {
+    if (data == undefined) {
+      StorageHandler.storeData("notifications_is_enable", "true");
+    }
+    if (data == "true" || data == undefined) {
+      await BackgroundService.start(veryIntensiveTask, options);
+      await BackgroundService.updateNotification({ taskDesc: 'New ExampleTask description' });
+    }
+  });
 }
 
 // InitializeBackgroundService();
