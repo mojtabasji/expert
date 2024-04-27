@@ -57,7 +57,17 @@ const NewExp = (props: any) => {
         });
     }
 
+    const validateInput = () => {
+        if (title === "" || content === "" || selectedItems.length === 0) {
+            Alert.alert("خطا", "فیلدهای عنوان، متن بحث و مهارت ها نمی توانند خالی باشند.");
+            return false;
+        }
+        return true;
+    }
+
     const uploadNewExp = () => {
+        if (!validateInput())
+            return;
         let form = new FormData();
         form.append("title", title);
         form.append("description", content);
@@ -76,11 +86,13 @@ const NewExp = (props: any) => {
             withCredentials: true,
         }).then(res => {
             if (res.data.result == "true") {
-                setSkills([]);
-                setContent("");
-                setSelectedItems([]);
-                setTitle("");
-                setImage({ uri: "" });
+                try {
+                    setSkills([]);
+                    setContent("");
+                    setSelectedItems([]);
+                    setTitle("");
+                    setImage({ uri: "" });
+                } catch (err) { console.log(err); };
                 props.navigation.navigate("Profile");
             }
             else if (res.data.ww == "true")
