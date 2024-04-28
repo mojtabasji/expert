@@ -280,7 +280,7 @@ const Profile = (Props: any) => {
                             position: "absolute", alignSelf: "center", top: 100, zIndex: 1,
                         }} />
                         {
-                            expContent.length === 0 ? <Text style={{ alignSelf: "center", }}>No exp</Text> :
+                            expContent.length === 0 ? <Text style={{ alignSelf: "center", }}>مبحثی وجو ندارد</Text> :
                                 expContent.map((item, index) => {
                                     return (
                                         <View key={index}>
