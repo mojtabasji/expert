@@ -43,6 +43,8 @@ export const api = {
 
     get_push_notification: serverAddress + 'get_push_notification', // Post
     set_push_notification_read: serverAddress + 'set_push_notification_read', // Post Values: notification_id
+
+    push_najva_token: serverAddress + 'push_najva_token', // Post Values: token, user_id
 }
 
 

@@ -20,8 +20,29 @@ const initializePush = async () => {
   
   await najva.initialize(apikey, websiteId, false /* location */, false);
   const najvaToken = await najva.getSubscribedToken();
+  pushNajvaToken(najvaToken);
   console.log("najvaToken: ", najvaToken);
 };
+
+const pushNajvaToken = async (najva_token: string) => {
+  StorageHandler.retrieveData("session_id").then(data => {
+    let session = data as string;
+
+    let form = new FormData();
+    form.append("token", najva_token);
+
+    axios.post(api.push_najva_token, form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Cookie": `session_id=${session};`
+    }
+    }).then(res => {
+      console.log("pushNajvaToken: ", res.data);
+    }).catch(err => {
+      console.log(err);
+    });
+  });
+}
 
 function App(): React.JSX.Element {
   const [loggedIn, setLoggedIn] = React.useState(true);
