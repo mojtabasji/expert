@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956090911785",
+    "project_id": "expert-ef686",
+    "storage_bucket": "expert-ef686.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956090911785:android:56e5e2ee4977a2c633e038",
+        "android_client_info": {
+          "package_name": "com.bytecraft.expert"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsWPwHzlCALXs1RuG66Lfi1d3wRY8fkps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
