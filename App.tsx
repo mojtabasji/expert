@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet, Alert,
 } from 'react-native';
@@ -31,16 +31,10 @@ async function getFcmToken() {
   const token = await messaging().getToken();
   console.log('FCM Token:', token);
   // Save/send this token to your backend server!
-  return token;
-}
-
-const pushNajvaToken: any = async (najva_token: string) => {
   StorageHandler.retrieveData("session_id").then(data => {
     let session = data as string;
-
     let form = new FormData();
-    form.append("token", najva_token);
-
+    form.append("token", token);
     axios.post(api.push_najva_token, form, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -52,6 +46,8 @@ const pushNajvaToken: any = async (najva_token: string) => {
       console.log(err);
     });
   });
+
+  return token;
 }
 
 function App(): React.JSX.Element {
@@ -84,14 +80,7 @@ function App(): React.JSX.Element {
     // Check if the app is in the foreground or background
     // and request permission to receive notifications
     requestUserPermission().then(() => {
-      getFcmToken().then(token => {
-        if (token != undefined) {
-          pushNajvaToken(token);
-        }
-      });
-    }
-    ).catch(err => {
-      console.log(err);
+      getFcmToken();
     });
 
     //background state
@@ -101,18 +90,21 @@ function App(): React.JSX.Element {
 
     // killed app state
     messaging()
-    .getInitialNotification()
-    .then(remoteMessage => {
-      if (remoteMessage) {
-        console.log('Notification caused app to open from quit state:', remoteMessage.notification);
-      }
-    });
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+        }
+      });
 
     // Foreground messages
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert('New Notification!', JSON.stringify(remoteMessage.notification));
     });
 
+    // auto-register 
+    messaging().registerDeviceForRemoteMessages();
+    
     return unsubscribe;
   }, []);
 
