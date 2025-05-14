@@ -32,14 +32,20 @@ async function getFcmToken() {
   console.log('FCM Token:', token);
   // Save/send this token to your backend server!
   StorageHandler.retrieveData("session_id").then(data => {
-    let session = data as string;
+    if (data == undefined)
+    {
+      console.log("session_id is undefined");
+      return;
+    }
+    let session;
+    session = `session_id=${data};`
     let form = new FormData();
     form.append("token", token);
     axios.post(api.push_najva_token, form, {
       headers: {
-        "Content-Type": "multipart/form-data",
-        "Cookie": `session_id=${session};`
-      }
+        'Content-Type': 'multipart/form-data',
+          Cookie: session
+        }
     }).then(res => {
       console.log("pushNajvaToken: ", res.data);
     }).catch(err => {
