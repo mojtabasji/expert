@@ -302,7 +302,7 @@ const Profile = (Props: any) => {
                                                         paddingBottom: 10,
                                                     }}>
                                                         <Text style={styles.expTitle}>{item.title}</Text>
-                                                        <Text>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                                                        <Text style={{textAlign: 'right'}}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             </Shadow>
@@ -383,6 +383,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#202020",
         marginVertical: 10,
+        textAlign: 'right'
     },
     expItem: {
         width: "100%",

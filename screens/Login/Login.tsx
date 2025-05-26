@@ -81,12 +81,12 @@ const Login = (props: any) => {
                         <Text style={css.largeText}>ورود</Text>
                         <Text style={[css.normalText, { color: 'gray' }]}>با حساب کاربری خود وارد شوید</Text>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>نام کاربری:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>نام کاربری:</Text>
                             <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="نام کاربری" onChangeText={(text) => setUsername(text)}
                                 value={username} />
                         </View>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>رمز عبور:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>رمز عبور:</Text>
                             <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="رمز عبور" onChangeText={(text) => setPassword(text)}
                                 value={password}
                                 secureTextEntry={true} />

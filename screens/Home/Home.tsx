@@ -138,8 +138,8 @@ const Home = (props: any) => {
                             <Text style={[css.smallText, { color: image_uri ? css.redesign.lightest : css.redesign.darker }]}>{item.user?.username}</Text>
                         </View>
                         <View style={{ marginBottom: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
-                            <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold" }}>{item.title}</Text>
-                            <Text style={{ marginTop: 10, }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                            <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold", textAlign: 'right' }}>{item.title}</Text>
+                            <Text style={{ marginTop: 10, textAlign: 'right' }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
                         </View>
                     </TouchableOpacity>
                 </Shadow>

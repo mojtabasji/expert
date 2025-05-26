@@ -26,7 +26,7 @@ const Welcome = (props: any) => {
                         </View>
                         <View style={styles.optionsArea}>
                             <Text style={css.largeText}>به اکسپرت خوش آمدید</Text>
-                            <Text style={[css.normalText, { color: 'gray', width: '80%' }]}>سوالات خود را از متخصص بپرسید و به سوالاتی که در آن تخصص دارید پاسخ دهید.</Text>
+                            <Text style={[css.normalText, { color: 'gray', width: '80%', textAlign: 'center' }]}>سوالات خود را از متخصص بپرسید و به سوالاتی که در آن تخصص دارید پاسخ دهید.</Text>
                             <View style={{
                                 height: '50%', width: '100%',
                                 flexDirection: 'row-reverse',

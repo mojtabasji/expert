@@ -265,7 +265,7 @@ const ShowOne = (props: any) => {
                     <View style={{
                         marginHorizontal: 20,
                     }}>
-                        <Text style={[css.titleText, { fontWeight: "bold", marginTop: 20 }]}>{exp.title}</Text>
+                        <Text style={[css.titleText, { fontWeight: "bold", marginTop: 20, textAlign: 'right' }]}>{exp.title}</Text>
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -295,7 +295,7 @@ const ShowOne = (props: any) => {
                                 </Menu>
                             </Box>
                         </View>
-                        <Text style={[css.normalText, { marginVertical: 20 }]}>{exp.content}</Text>
+                        <Text style={[css.normalText, { marginVertical: 20, textAlign: 'right' }]}>{exp.content}</Text>
                         {
                             response.map((item, index) => {
                                 return (
@@ -361,7 +361,7 @@ const ShowOne = (props: any) => {
                                                         </Box>
                                                     </View>
                                                 </View>
-                                                <Text style={[css.smallText, { paddingTop: 15 }]}>{item.content}</Text>
+                                                <Text style={[css.smallText, { paddingTop: 15, textAlign: 'right' }]}>{item.content}</Text>
                                             </View>
                                         </Shadow>
                                     </View>

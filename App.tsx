@@ -32,8 +32,7 @@ async function getFcmToken() {
   console.log('FCM Token:', token);
   // Save/send this token to your backend server!
   StorageHandler.retrieveData("session_id").then(data => {
-    if (data == undefined)
-    {
+    if (data == undefined) {
       console.log("session_id is undefined");
       return;
     }
@@ -44,8 +43,8 @@ async function getFcmToken() {
     axios.post(api.push_najva_token, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
-          Cookie: session
-        }
+        Cookie: session
+      }
     }).then(res => {
       console.log("pushNajvaToken: ", res.data);
     }).catch(err => {
@@ -82,16 +81,27 @@ function App(): React.JSX.Element {
 
   // FireBase Config
   useEffect(() => {
+
+    messaging().requestPermission()
+      .then(authStatus => {
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+          console.log('Authorization status:', authStatus);
+        } else {
+          Alert.alert('Permission denied for notifications');
+        }
+      })
+      .catch(error => {
+        console.error('Error requesting permission:', error);
+      });
+
     // Foreground messages
     // Check if the app is in the foreground or background
     // and request permission to receive notifications
     requestUserPermission().then(() => {
       getFcmToken();
-    });
-
-    //background state
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
     });
 
     // killed app state
@@ -103,14 +113,26 @@ function App(): React.JSX.Element {
         }
       });
 
+    // Subscribe to a topic (e.g., "all")
+    messaging()
+      .subscribeToTopic('all_users')
+      .then(() => console.log('Subscribed to topic!'));
+
     // Foreground messages
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('New Notification!', JSON.stringify(remoteMessage.notification));
-    });
+      console.log('A new FCM message arrived!', remoteMessage);
+      // Handle the foreground message here
+      Alert.alert(
+        remoteMessage.notification?.title || 'Notification',
+        remoteMessage.notification?.body || 'You have a new notification.',
+        [{ text: 'OK' }],
+      );
+    }
+    );
 
     // auto-register 
     messaging().registerDeviceForRemoteMessages();
-    
+
     return unsubscribe;
   }, []);
 
