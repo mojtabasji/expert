@@ -13,6 +13,7 @@ import Welcome from './screens/Welcome';
 import BTabHandler from './screens/BTabHandler';
 
 import messaging from '@react-native-firebase/messaging';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -24,6 +25,36 @@ async function requestUserPermission() {
     console.log('Authorization status:', authStatus);
   } else {
     Alert.alert('Permission denied for notifications');
+  }
+}
+
+async function checkNotificationPermission() {
+  const settings = await notifee.getNotificationSettings();
+
+  if (settings.authorizationStatus == AuthorizationStatus.AUTHORIZED) {
+    console.log('Notification permissions has been authorized');
+  } else if (settings.authorizationStatus == AuthorizationStatus.DENIED) {
+    console.log('Notification permissions has been denied');
+    //  openNotificationSettings
+    Alert.alert(
+      'Notification permissions denied',
+      'Please enable notifications in your device settings.',
+      [
+        {
+          text: 'Open Settings',
+          onPress: () => notifee.openNotificationSettings(),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => {
+            setTimeout(() => {
+              checkNotificationPermission();
+            }, 20000);
+          }
+        },
+      ],
+    );
   }
 }
 
@@ -134,6 +165,15 @@ function App(): React.JSX.Element {
     messaging().registerDeviceForRemoteMessages();
 
     return unsubscribe;
+
+    // check notification permission
+    checkNotificationPermission().then(() => {
+      console.log('Notification permission checked');
+    }
+    ).catch(error => {
+      console.error('Error checking notification permission:', error);
+    }
+    );
   }, []);
 
   useEffect(() => {
