@@ -7,6 +7,7 @@ const { width, height } = Dimensions.get('window');
 import css from '../constants/css';
 import { StorageHandler } from '../constants/StorageHandler';
 import LHandler from './Login/LHandler';
+import { appVersion as version } from '../constants/Const';
 
 
 const Welcome = (props: any) => {
@@ -44,7 +45,7 @@ const Welcome = (props: any) => {
                                     <Text style={[css.btn_text, { color: css.redesign.lightest }]}>برای شروع وارد شوید</Text>
                                 </TouchableOpacity>
                             </View>
-
+                            <Text style={styles.versionText}>نسخه {version}</Text>
                         </View>
                     </LinearGradient>
                     :
@@ -75,6 +76,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 30,
 
+    },
+    versionText: {        
+        color: '#222',
+        fontSize: 12,
+        position: 'absolute',
+        bottom: 10,
     }
 });
 

@@ -37,15 +37,17 @@ async function checkNotificationPermission() {
     console.log('Notification permissions has been denied');
     //  openNotificationSettings
     Alert.alert(
-      'Notification permissions denied',
-      'Please enable notifications in your device settings.',
+      // دسترسی به اعلان‌ها غیرفعال است',
+      'دسترسی به اعلان‌ها غیرفعال است',
+      'برای فعال‌سازی اعلان‌ها، لطفاً به تنظیمات بروید و اعلان‌ها را فعال کنید.',
       [
         {
-          text: 'Open Settings',
+          text: 'برو به تنظیمات',
+          style: 'default',
           onPress: () => notifee.openNotificationSettings(),
         },
         {
-          text: 'Cancel',
+          text: 'بعداً بررسی می‌کنم',
           style: 'cancel',
           onPress: () => {
             setTimeout(() => {
@@ -164,8 +166,6 @@ function App(): React.JSX.Element {
     // auto-register 
     messaging().registerDeviceForRemoteMessages();
 
-    return unsubscribe;
-
     // check notification permission
     checkNotificationPermission().then(() => {
       console.log('Notification permission checked');
@@ -174,6 +174,8 @@ function App(): React.JSX.Element {
       console.error('Error checking notification permission:', error);
     }
     );
+
+    return unsubscribe;
   }, []);
 
   useEffect(() => {

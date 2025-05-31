@@ -13,7 +13,7 @@ import css from '../../constants/css';
 import data, { top_users } from '../../assets/data';
 import TabView from '../../constants/TabView';
 import { StorageHandler } from '../../constants/StorageHandler';
-import { api } from '../../constants/Const';
+import { api, appVersion as version } from '../../constants/Const';
 import { Exp, Skill, User } from '../../constants/Types';
 
 
@@ -45,6 +45,28 @@ const Profile = (Props: any) => {
                         }
                     }).then((response) => {
                         setUser(response.data as User);
+                    }).catch((error) => { console.log(error); });
+
+                    axios.get(api.get_update + `?version=${version}`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Cookie': `session_id=${session}`
+                        }
+                    }).then((response) => {
+                        if (response.data.result == "true") {
+                            Alert.alert("نسخه جدید ایجاد شده است", response.data.message, [
+                                {
+                                    text: "بله",
+                                    onPress: () => {
+                                        // Open the link in the browser
+                                        
+                                    }
+                                },
+                                {
+                                    text: "خیر",
+                                }
+                            ]);
+                        }
                     }).catch((error) => { console.log(error); });
                 }
             });
