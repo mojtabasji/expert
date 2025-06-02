@@ -9,7 +9,6 @@ import { StorageHandler } from '../../constants/StorageHandler';
 import { Exp, User, Skill } from '../../constants/Types';
 import { api } from '../../constants/Const';
 import css from '../../constants/css';
-import { background } from 'native-base/lib/typescript/theme/styled-system';
 
 const SkillsEdit = (props: any) => {
     const [skills, setSkills] = useState([] as Skill[]);
@@ -110,18 +109,25 @@ const SkillsEdit = (props: any) => {
                     <Text style={[css.normalText, { textAlign: 'center' }]}>حذف</Text>
                 </View>
                 <ScrollView>
-                    {userSkills.map((item, index) => {
-                        return (
-                            <View key={index} style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                                <Text style={css.smallText}>{item.name}</Text>
-                                <TouchableOpacity onPress={() => {
-                                    removeUserSkill(item);
-                                }}>
-                                    <Icon name="trash" size={16} color={css.redesign.supplement} />
-                                </TouchableOpacity>
-                            </View>
-                        );
-                    })}
+                    {
+                        userSkills.length == 0 ?
+                        <View style={{ flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center', padding: 10, paddingTop: 40, borderBottomColor: '#ccc' }}>
+                            <Text style={[css.normalText, {width: '80%', textAlign:'center'}]}>فعالیت مهارتی خود را در لیست زیر جستجو کنید</Text>
+                        </View>
+                            :
+                            userSkills.map((item, index) => {
+                                return (
+                                    <View key={index} style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
+                                        <Text style={css.smallText}>{item.name}</Text>
+                                        <TouchableOpacity onPress={() => {
+                                            removeUserSkill(item);
+                                        }}>
+                                            <Icon name="trash" size={16} color={css.redesign.supplement} />
+                                        </TouchableOpacity>
+                                    </View>
+                                );
+                            })
+                    }
                 </ScrollView>
                 <TouchableOpacity onPress={() => { setShowPopup(true); }}
                     style={{ flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 10 }}>
@@ -171,6 +177,7 @@ const SkillsEdit = (props: any) => {
                                 nestedScrollEnabled: true,
                             }
                         }
+
                     />
                     <Icon name="chevron-down" size={16} style={{ position: 'absolute', left: 25, top: 25 }} />
                 </View>

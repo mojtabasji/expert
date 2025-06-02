@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Profile from "./Profile";
@@ -9,7 +9,12 @@ import EditProfile from "./EditProfile";
 import Settings from "./Settings";
 
 const ProfileStack = createNativeStackNavigator();
-const HSHandler = ()=>{
+const HSHandler = (props: any)=>{
+    useEffect(() => {
+        if (props.route.params && props.route.params.screen) {
+            props.navigation.navigate(props.route.params.screen);
+        }
+    }, [props.navigation]);
     return(
         <ProfileStack.Navigator screenOptions={{
             headerShown: false

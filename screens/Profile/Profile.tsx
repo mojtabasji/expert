@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl, ActivityIndicator, Linking } from 'react-native';
 import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
@@ -59,7 +59,7 @@ const Profile = (Props: any) => {
                                     text: "بله",
                                     onPress: () => {
                                         // Open the link in the browser
-                                        
+                                        openLink(response.data.update_url);
                                     }
                                 },
                                 {
@@ -176,6 +176,12 @@ const Profile = (Props: any) => {
             updateLoggedIn(false);
         });
         StorageHandler.removeData("user_id").then(() => { });
+    }
+
+    const openLink = (url: string) => {
+        Linking.openURL(url).catch(err => {
+            Alert.alert('Error', 'Could not open the link');
+        });
     }
 
     return (
@@ -324,7 +330,7 @@ const Profile = (Props: any) => {
                                                         paddingBottom: 10,
                                                     }}>
                                                         <Text style={styles.expTitle}>{item.title}</Text>
-                                                        <Text style={{textAlign: 'right'}}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                                                        <Text style={{ textAlign: 'right' }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             </Shadow>
