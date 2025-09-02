@@ -1,10 +1,8 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import {
-  SafeAreaView, ScrollView, StatusBar,
-  StyleSheet, Text, useColorScheme, View, Alert, Platform
+  StyleSheet, Alert,
 } from 'react-native';
 import axios from 'axios';
-import najva from "react-native-najva";
 
 import { api } from './constants/Const';
 import credentials from './constants/credentials';
@@ -14,34 +12,80 @@ import NotificationHandler from './constants/NotificationHandler';
 import Welcome from './screens/Welcome';
 import BTabHandler from './screens/BTabHandler';
 
-const initializePush = async () => {
-  const apikey = credentials.najva.apikey; // get api key from najva panel
-  const websiteId = credentials.najva.websiteId; // get website id from najva panel
-  
-  await najva.initialize(apikey, websiteId, false /* location */, false);
-  const najvaToken = await najva.getSubscribedToken();
-  pushNajvaToken(najvaToken);
-  console.log("najvaToken: ", najvaToken);
-};
+import messaging from '@react-native-firebase/messaging';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 
-const pushNajvaToken = async (najva_token: string) => {
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  } else {
+    Alert.alert('Permission denied for notifications');
+  }
+}
+
+async function checkNotificationPermission() {
+  const settings = await notifee.getNotificationSettings();
+
+  if (settings.authorizationStatus == AuthorizationStatus.AUTHORIZED) {
+    console.log('Notification permissions has been authorized');
+  } else if (settings.authorizationStatus == AuthorizationStatus.DENIED) {
+    console.log('Notification permissions has been denied');
+    //  openNotificationSettings
+    Alert.alert(
+      // دسترسی به اعلان‌ها غیرفعال است',
+      'دسترسی به اعلان‌ها غیرفعال است',
+      'برای فعال‌سازی اعلان‌ها، لطفاً به تنظیمات بروید و اعلان‌ها را فعال کنید.',
+      [
+        {
+          text: 'برو به تنظیمات',
+          style: 'default',
+          onPress: () => notifee.openNotificationSettings(),
+        },
+        {
+          text: 'بعداً بررسی می‌کنم',
+          style: 'cancel',
+          onPress: () => {
+            setTimeout(() => {
+              checkNotificationPermission();
+            }, 20000);
+          }
+        },
+      ],
+    );
+  }
+}
+
+async function getFcmToken() {
+  const token = await messaging().getToken();
+  console.log('FCM Token:', token);
+  // Save/send this token to your backend server!
   StorageHandler.retrieveData("session_id").then(data => {
-    let session = data as string;
-
+    if (data == undefined) {
+      console.log("session_id is undefined");
+      return;
+    }
+    let session;
+    session = `session_id=${data};`
     let form = new FormData();
-    form.append("token", najva_token);
-
+    form.append("token", token);
     axios.post(api.push_najva_token, form, {
       headers: {
-        "Content-Type": "multipart/form-data",
-        "Cookie": `session_id=${session};`
-    }
+        'Content-Type': 'multipart/form-data',
+        Cookie: session
+      }
     }).then(res => {
       console.log("pushNajvaToken: ", res.data);
     }).catch(err => {
       console.log(err);
     });
   });
+
+  return token;
 }
 
 function App(): React.JSX.Element {
@@ -59,7 +103,7 @@ function App(): React.JSX.Element {
       if (data != "false") {
         if (notificationIsEnable) {
           // notification is enabled
-          initializePush();
+          // initializePush();
         }
         else {
           // notification is disabled
@@ -67,6 +111,72 @@ function App(): React.JSX.Element {
       }
     });
   }, [notificationIsEnable]);
+
+  // FireBase Config
+  useEffect(() => {
+
+    messaging().requestPermission()
+      .then(authStatus => {
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+          console.log('Authorization status:', authStatus);
+        } else {
+          Alert.alert('Permission denied for notifications');
+        }
+      })
+      .catch(error => {
+        console.error('Error requesting permission:', error);
+      });
+
+    // Foreground messages
+    // Check if the app is in the foreground or background
+    // and request permission to receive notifications
+    requestUserPermission().then(() => {
+      getFcmToken();
+    });
+
+    // killed app state
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+        }
+      });
+
+    // Subscribe to a topic (e.g., "all")
+    messaging()
+      .subscribeToTopic('all_users')
+      .then(() => console.log('Subscribed to topic!'));
+
+    // Foreground messages
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', remoteMessage);
+      // Handle the foreground message here
+      Alert.alert(
+        remoteMessage.notification?.title || 'Notification',
+        remoteMessage.notification?.body || 'You have a new notification.',
+        [{ text: 'OK' }],
+      );
+    }
+    );
+
+    // auto-register 
+    messaging().registerDeviceForRemoteMessages();
+
+    // check notification permission
+    checkNotificationPermission().then(() => {
+      console.log('Notification permission checked');
+    }
+    ).catch(error => {
+      console.error('Error checking notification permission:', error);
+    }
+    );
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     StorageHandler.retrieveData("notifications_is_enable").then(data => {

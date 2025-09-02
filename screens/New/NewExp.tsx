@@ -143,11 +143,11 @@ const NewExp = (props: any) => {
                             marginVertical: 20,
                         }} >
                             <View style={styles.InputArea}>
-                                <Text style={[css.normalText, { marginBottom: 10 }]}>عنوان:</Text>
+                                <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>عنوان:</Text>
                                 <TextInput style={[css.smallText, styles.Input]} placeholder="عنوان" onChangeText={text => setTitle(text)} value={title} />
                             </View>
                             <View style={styles.InputArea}>
-                                <Text style={[css.normalText, { marginBottom: 10 }]}>متن بحث:</Text>
+                                <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>متن بحث:</Text>
                                 <TextInput numberOfLines={5} multiline={true} style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="متن بحث" onChangeText={text => setContent(text)} value={content} />
                             </View>
                             <TouchableOpacity onPress={() => { setShowPopup(true); }}

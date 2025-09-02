@@ -37,7 +37,7 @@ const BTabHandler = () => {
                         else {
                             color = css.redesign.darker;
                         }
-                        return <Icon name={iconName} size={size} color={color}  solid={focused} light={!focused} />;
+                        return <Icon key={iconName} name={iconName} size={size} color={color}  solid={focused} light={!focused} />;
                     },
                     tabBarActiveTintColor: css.redesign.darker,
                     // tabBarShowLabel: false,
@@ -48,7 +48,7 @@ const BTabHandler = () => {
                         if (route.name == "NESHandler") name = "جدید";
                         if (route.name == "Notification") name = "اعلان";
                         if (route.name == "user") name = "کاربر";
-                        return <Text style={{ color: color, fontSize: 12, textAlign: 'center' }}>{name}</Text>
+                        return <Text key={name} style={{ color: color, fontSize: 12, textAlign: 'center' }}>{name}</Text>
                     },
                     tabBarStyle: {
                         paddingVertical: 5,

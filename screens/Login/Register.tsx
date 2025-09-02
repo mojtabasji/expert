@@ -19,6 +19,7 @@ const Register = (props: any) => {
     const [privacyState, setPrivacyState] = useState(false);
 
     const [is_username_valid, setIsUsernameValid] = useState(true);
+    const [is_phone_valid, setIsPhoneValid] = useState(true);
     const { loggedIn, updateLoggedIn } = useContext(LoginHandler);
     const [show_privacy, setShowPrivacy] = useState(false);
 
@@ -34,9 +35,26 @@ const Register = (props: any) => {
         });
     }
 
+    const checkPhoneValidity = () => {
+        let phoneRegex = /^(\+98|0)?9\d{9}$/; // Iranian phone number regex
+        if (phoneRegex.test(phone)) {
+            // Phone number is valid
+            setIsPhoneValid(true);
+            return true;
+        } else {
+            // Phone number is invalid
+            setIsPhoneValid(false);
+            return false;
+        }
+    }
+
     const register = () => {
         if (!is_username_valid) {
             Alert.alert("نام کاربری قبلا ثبت شده است");
+            return;
+        }
+        if (!is_phone_valid) {
+            Alert.alert("شماره تلفن وارد شده معتبر نیست");
             return;
         }
         if (password != password_confirm) {
@@ -86,7 +104,7 @@ const Register = (props: any) => {
                         <Text style={css.largeText}>ثبت نام</Text>
                         <Text style={[css.normalText, { color: 'gray' }]}>لطفا اطلاعات خود را وارد کنید</Text>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>نام کاربری:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>نام کاربری:</Text>
                             <TextInput style={[css.smallText, styles.Input, {
                                 borderWidth: 1,
                                 borderColor: is_username_valid ? "green" : 'red',
@@ -96,26 +114,30 @@ const Register = (props: any) => {
                                 onBlur={checkUsernameValidity} />
                         </View>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}> نام و نام خانوادگی:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}> نام و نام خانوادگی:</Text>
                             <TextInput style={[css.smallText, styles.Input]} placeholder="نام و نام خانوادگی"
                                 onChangeText={text => setFullname(text)}
                                 value={fullname} />
                         </View>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>شماره تلفن:</Text>
-                            <TextInput style={[css.smallText, styles.Input]} placeholder="شماره تلفن"
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>شماره تلفن:</Text>
+                            <TextInput style={[css.smallText, styles.Input, {
+                                borderWidth: 1,
+                                borderColor: is_phone_valid ? "green" : 'red',
+                            }]} placeholder="شماره تلفن"
                                 onChangeText={text => setPhone(text)}
-                                value={phone} />
+                                value={phone}
+                                onBlur={checkPhoneValidity} />
                         </View>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>رمز عبور:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>رمز عبور:</Text>
                             <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="رمز عبور"
                                 onChangeText={text => setPassword(text)}
                                 value={password}
                                 secureTextEntry={true} />
                         </View>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>تکرار رمز عبور:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>تکرار رمز عبور:</Text>
                             <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="تکرار رمز عبور" onChangeText={text => setPasswordConfirm(text)}
                                 value={password_confirm}
                                 secureTextEntry={true} />

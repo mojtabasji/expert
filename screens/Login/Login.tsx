@@ -81,12 +81,30 @@ const Login = (props: any) => {
                         <Text style={css.largeText}>ورود</Text>
                         <Text style={[css.normalText, { color: 'gray' }]}>با حساب کاربری خود وارد شوید</Text>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>نام کاربری:</Text>
+                            <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>نام کاربری:</Text>
                             <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="نام کاربری" onChangeText={(text) => setUsername(text)}
                                 value={username} />
                         </View>
                         <View style={styles.InputArea}>
-                            <Text style={[css.normalText, { marginBottom: 10 }]}>رمز عبور:</Text>
+                            <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', }}>
+                                <Text style={[css.normalText, { marginBottom: 10, textAlign: 'right' }]}>رمز عبور:</Text>
+                                <TouchableOpacity
+                                    style={{ flexDirection: 'row', alignItems: 'center' }}
+                                    onPress={() => Alert.alert(
+                                        "فراموشی رمز عبور",
+                                        "برای بازیابی رمز عبور، لطفاً با پشتیبانی تماس بگیرید. \n Telegram: @mojtaba_shojai \n Email:mojtabashojai.20@gmail.com",
+                                        [
+                                            {
+                                                text: "باشه",
+                                                onPress: () => console.log("OK Pressed")
+                                            }
+                                        ],
+                                        { cancelable: false }
+                                    )}>
+                                    <Icon name="question-circle" size={16} color={css.redesign.gray} />
+                                    <Text style={styles.passForget}>فراموشی رمز عبور   </Text>
+                                </TouchableOpacity>
+                            </View>
                             <TextInput style={[css.smallText, styles.Input]} textAlignVertical="top" placeholder="رمز عبور" onChangeText={(text) => setPassword(text)}
                                 value={password}
                                 secureTextEntry={true} />
@@ -168,6 +186,11 @@ const styles = StyleSheet.create({
         backgroundColor: css.redesign.lightest,
         borderRadius: 10,
         paddingHorizontal: 10,
+    },
+    passForget: {
+        color: 'blue',
+        textAlign: 'right',
+        fontSize: 12,
     },
 });
 

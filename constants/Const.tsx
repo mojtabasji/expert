@@ -1,5 +1,6 @@
 
 export const max_comment_see_in_home = 2;
+export const appVersion = '2.0.1';
 
 export const serverAddress = 'https://bytecraft.ir/expert/api/';
 
@@ -45,6 +46,8 @@ export const api = {
     set_push_notification_read: serverAddress + 'set_push_notification_read', // Post Values: notification_id
 
     push_najva_token: serverAddress + 'users/push_najva_token', // Post Values: token, user_id
+
+    get_update: serverAddress + 'get_update', // GET
 }
 
 

@@ -80,6 +80,7 @@ class css {
             color: '#000',
             textAlign: 'center',
             fontWeight: 'bold',
+            minHeight: '30'
         };
     }
 

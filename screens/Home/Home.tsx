@@ -80,6 +80,29 @@ const Home = (props: any) => {
             }).then(res => {
                 setTopUsers(res.data as User[]);
             }).catch(err => { console.log(err); });
+
+            // Check if user add some skills
+            axios.get(api.get_user_skills, {
+                headers: {
+                    Cookie: `session_id=${session};`
+                }
+            }).then(res => {
+                console.log(res.data);
+                if (res.data.length == 0) {
+                    Alert.alert("توجه", "شما هیچ مهارتی اضافه نکرده اید. برای اضافه کردن مهارت به پروفایل خود، از منوی سه نقطه موجود در بالای صفحه کاربر گزینه 'ویرایش مهارت ها' را انتخاب کنید.",
+                        [
+                            {
+                                text: "اضافه کردن",
+                                onPress: () => { change_screen("user", {screen: "SkillsEdit"}); }
+                            },
+                            {
+                                text: "بعدا",
+                                style: "cancel"
+                            }
+                        ]
+                    );
+                }
+            }).catch(err => { console.log(err); });
         });
     }, [])
 
@@ -138,8 +161,8 @@ const Home = (props: any) => {
                             <Text style={[css.smallText, { color: image_uri ? css.redesign.lightest : css.redesign.darker }]}>{item.user?.username}</Text>
                         </View>
                         <View style={{ marginBottom: 10, paddingHorizontal: 10, paddingBottom: 10 }}>
-                            <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold" }}>{item.title}</Text>
-                            <Text style={{ marginTop: 10, }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                            <Text style={{ fontSize: 20, color: "#202020", marginVertical: 10, fontWeight: "bold", textAlign: 'right' }}>{item.title}</Text>
+                            <Text style={{ marginTop: 10, textAlign: 'right' }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
                         </View>
                     </TouchableOpacity>
                 </Shadow>
@@ -273,7 +296,7 @@ const Home = (props: any) => {
                                 exps.map((item, index) => render_items(item, index))
                                 :
                                 // <ActivityIndicator size={'large'} color={css.redesign.darker} />
-                                <Text style={[css.normalText, { color: css.redesign.darker, marginHorizontal: 20, marginTop: 100, textAlign: "justify" }]}>چیزی برای نمایش وجود ندارد. مهارت های خود را ویرایش کنید.</Text>
+                                <Text style={[css.normalText, { color: css.redesign.darker, marginHorizontal: 20, marginTop: 100, textAlign: "center" }]}>چیزی برای نمایش وجود ندارد. مهارت های خود را ویرایش کنید.</Text>
                         }
                     </View>
                 </View>

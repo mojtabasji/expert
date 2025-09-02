@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Dimensions, Image, RefreshControl, ActivityIndicator, Linking } from 'react-native';
 import { Menu, Pressable, HamburgerIcon, Box, ThreeDotsIcon } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
@@ -13,7 +13,7 @@ import css from '../../constants/css';
 import data, { top_users } from '../../assets/data';
 import TabView from '../../constants/TabView';
 import { StorageHandler } from '../../constants/StorageHandler';
-import { api } from '../../constants/Const';
+import { api, appVersion as version } from '../../constants/Const';
 import { Exp, Skill, User } from '../../constants/Types';
 
 
@@ -45,6 +45,28 @@ const Profile = (Props: any) => {
                         }
                     }).then((response) => {
                         setUser(response.data as User);
+                    }).catch((error) => { console.log(error); });
+
+                    axios.get(api.get_update + `?version=${version}`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Cookie': `session_id=${session}`
+                        }
+                    }).then((response) => {
+                        if (response.data.result == "true") {
+                            Alert.alert("نسخه جدید ایجاد شده است", response.data.message, [
+                                {
+                                    text: "بله",
+                                    onPress: () => {
+                                        // Open the link in the browser
+                                        openLink(response.data.update_url);
+                                    }
+                                },
+                                {
+                                    text: "خیر",
+                                }
+                            ]);
+                        }
                     }).catch((error) => { console.log(error); });
                 }
             });
@@ -154,6 +176,12 @@ const Profile = (Props: any) => {
             updateLoggedIn(false);
         });
         StorageHandler.removeData("user_id").then(() => { });
+    }
+
+    const openLink = (url: string) => {
+        Linking.openURL(url).catch(err => {
+            Alert.alert('Error', 'Could not open the link');
+        });
     }
 
     return (
@@ -302,7 +330,7 @@ const Profile = (Props: any) => {
                                                         paddingBottom: 10,
                                                     }}>
                                                         <Text style={styles.expTitle}>{item.title}</Text>
-                                                        <Text>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
+                                                        <Text style={{ textAlign: 'right' }}>{item.content.length > 150 ? item.content.substring(0, 150) + "..." : item.content}</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             </Shadow>
@@ -383,6 +411,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#202020",
         marginVertical: 10,
+        textAlign: 'right'
     },
     expItem: {
         width: "100%",
